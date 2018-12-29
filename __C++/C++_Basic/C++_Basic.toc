@@ -86,9 +86,11 @@
 \contentsline {subparagraph}{1. 使用引用改变}{47}{section*.34}
 \contentsline {subparagraph}{2. 使用指针改变}{48}{section*.35}
 \contentsline {subsubsection}{初始化}{48}{section*.36}
-\contentsline {section}{\numberline {5.2}Union}{48}{section.5.2}
-\contentsline {subsection}{\numberline {5.2.1}定义}{48}{subsection.5.2.1}
-\contentsline {section}{\numberline {5.3}字节对齐-StructAndUnion}{49}{section.5.3}
+\contentsline {subsection}{\numberline {5.1.3}变长结构体}{48}{subsection.5.1.3}
+\contentsline {paragraph}{注意}{49}{section*.37}
+\contentsline {section}{\numberline {5.2}Union}{49}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}定义}{49}{subsection.5.2.1}
+\contentsline {section}{\numberline {5.3}字节对齐-StructAndUnion}{50}{section.5.3}
 \contentsline {chapter}{\numberline {第六章\hspace {0.3em}}string}{51}{chapter.6}
 \contentsline {section}{\numberline {6.1}方法}{51}{section.6.1}
 \contentsline {subsection}{\numberline {6.1.1}string类的构造函数}{51}{subsection.6.1.1}
@@ -110,8 +112,8 @@
 \contentsline {subsection}{\numberline {7.5.1}值语义}{57}{subsection.7.5.1}
 \contentsline {subsection}{\numberline {7.5.2}对象语义}{57}{subsection.7.5.2}
 \contentsline {section}{\numberline {7.6}拷贝构造函数}{57}{section.7.6}
-\contentsline {subparagraph}{浅拷贝与深拷贝}{58}{section*.37}
-\contentsline {subparagraph}{拷贝构造函数可能的错误}{58}{section*.38}
+\contentsline {subparagraph}{浅拷贝与深拷贝}{58}{section*.38}
+\contentsline {subparagraph}{拷贝构造函数可能的错误}{58}{section*.39}
 \contentsline {section}{\numberline {7.7}初始化列表}{58}{section.7.7}
 \contentsline {section}{\numberline {7.8}一些只有}{58}{section.7.8}
 \contentsline {section}{\numberline {7.9}STATIC 修饰词}{59}{section.7.9}
@@ -130,10 +132,10 @@
 \contentsline {section}{\numberline {9.3}继承方式}{67}{section.9.3}
 \contentsline {subsection}{\numberline {9.3.1}继承后对父类资源的访问权限}{67}{subsection.9.3.1}
 \contentsline {subsection}{\numberline {9.3.2}继承约束}{67}{subsection.9.3.2}
-\contentsline {subsubsection}{禁止继承-final}{67}{section*.39}
+\contentsline {subsubsection}{禁止继承-final}{67}{section*.40}
 \contentsline {subsection}{\numberline {9.3.3}重写 父类方法}{67}{subsection.9.3.3}
 \contentsline {subsection}{\numberline {9.3.4}切片}{68}{subsection.9.3.4}
-\contentsline {subparagraph}{Casting Up and Down}{69}{section*.40}
+\contentsline {subparagraph}{Casting Up and Down}{69}{section*.41}
 \contentsline {subsection}{\numberline {9.3.5}使用 父类方法}{69}{subsection.9.3.5}
 \contentsline {section}{\numberline {9.4}支持多继承}{69}{section.9.4}
 \contentsline {section}{\numberline {9.5}虚基类}{69}{section.9.5}
@@ -143,14 +145,14 @@
 \contentsline {subsection}{\numberline {9.6.3}C++ 接口与抽象类的区别}{72}{subsection.9.6.3}
 \contentsline {chapter}{\numberline {第十章\hspace {0.3em}}virtual 关键字}{73}{chapter.10}
 \contentsline {section}{\numberline {10.1}多态}{73}{section.10.1}
-\contentsline {subparagraph}{编译器绑定-非多态}{73}{section*.41}
-\contentsline {subparagraph}{运行期绑定-多态}{73}{section*.42}
-\contentsline {subparagraph}{C++中多态有以下三个前提条件}{73}{section*.43}
-\contentsline {subparagraph}{*析构函数为什么要是 virtual的}{73}{section*.44}
-\contentsline {subparagraph}{占用空间问题}{73}{section*.45}
+\contentsline {subparagraph}{编译器绑定-非多态}{73}{section*.42}
+\contentsline {subparagraph}{运行期绑定-多态}{73}{section*.43}
+\contentsline {subparagraph}{C++中多态有以下三个前提条件}{73}{section*.44}
+\contentsline {subparagraph}{*析构函数为什么要是 virtual的}{73}{section*.45}
+\contentsline {subparagraph}{占用空间问题}{73}{section*.46}
 \contentsline {section}{\numberline {10.2}虚函数表}{74}{section.10.2}
-\contentsline {subparagraph}{vtbl}{74}{section*.46}
-\contentsline {subparagraph}{vptr}{74}{section*.47}
+\contentsline {subparagraph}{vtbl}{74}{section*.47}
+\contentsline {subparagraph}{vptr}{74}{section*.48}
 \contentsline {subsection}{\numberline {10.2.1}一般继承（无虚函数覆盖）}{76}{subsection.10.2.1}
 \contentsline {subsection}{\numberline {10.2.2}一般继承（有虚函数覆盖）}{77}{subsection.10.2.2}
 \contentsline {chapter}{\numberline {第十一章\hspace {0.3em}}C++ 内存结构}{79}{chapter.11}
@@ -168,38 +170,38 @@
 \contentsline {subsection}{\numberline {11.2.5}单继承(base 有virtual)}{84}{subsection.11.2.5}
 \contentsline {subsection}{\numberline {11.2.6}虚继承-单继承(virtual)}{85}{subsection.11.2.6}
 \contentsline {subsection}{\numberline {11.2.7}多继承(base 有 virtual)}{86}{subsection.11.2.7}
-\contentsline {subparagraph}{菱形继承}{88}{section*.48}
+\contentsline {subparagraph}{菱形继承}{88}{section*.49}
 \contentsline {subsection}{\numberline {11.2.8}虚继承-多继承(base 有 virtual)}{89}{subsection.11.2.8}
-\contentsline {subparagraph}{Derived类图}{89}{section*.49}
-\contentsline {subparagraph}{DerivedDerived 类图}{90}{section*.50}
-\contentsline {subparagraph}{总结}{90}{section*.51}
+\contentsline {subparagraph}{Derived类图}{89}{section*.50}
+\contentsline {subparagraph}{DerivedDerived 类图}{90}{section*.51}
+\contentsline {subparagraph}{总结}{90}{section*.52}
 \contentsline {section}{\numberline {11.3}ELF}{91}{section.11.3}
 \contentsline {chapter}{\numberline {第十二章\hspace {0.3em}}extern 关键字}{93}{chapter.12}
 \contentsline {section}{\numberline {12.1}基本解释}{93}{section.12.1}
 \contentsline {section}{\numberline {12.2}问题}{93}{section.12.2}
-\contentsline {subsubsection}{作用范围-可见性的关键字}{93}{section*.52}
-\contentsline {subparagraph}{extern 变量}{93}{section*.53}
-\contentsline {subsubsection}{连接申明linkage declaration}{93}{section*.54}
-\contentsline {subparagraph}{extern"C"}{93}{section*.55}
-\contentsline {subparagraph}{extern 函数声明}{94}{section*.56}
+\contentsline {subsubsection}{作用范围-可见性的关键字}{93}{section*.53}
+\contentsline {subparagraph}{extern 变量}{93}{section*.54}
+\contentsline {subsubsection}{连接申明linkage declaration}{93}{section*.55}
+\contentsline {subparagraph}{extern"C"}{93}{section*.56}
+\contentsline {subparagraph}{extern 函数声明}{94}{section*.57}
 \contentsline {chapter}{\numberline {第十三章\hspace {0.3em}}volatile 关键字}{95}{chapter.13}
 \contentsline {section}{\numberline {13.1}含义}{95}{section.13.1}
 \contentsline {section}{\numberline {13.2}示例}{95}{section.13.2}
-\contentsline {paragraph}{声明时语法}{95}{section*.57}
-\contentsline {paragraph}{volatile变量 调用过程}{95}{section*.58}
+\contentsline {paragraph}{声明时语法}{95}{section*.58}
+\contentsline {paragraph}{volatile变量 调用过程}{95}{section*.59}
 \contentsline {section}{\numberline {13.3}volatile 指针}{97}{section.13.3}
 \contentsline {section}{\numberline {13.4}多线程下的 volatile}{97}{section.13.4}
-\contentsline {subparagraph}{在一个线程中}{97}{section*.59}
-\contentsline {subparagraph}{在另外一个线程中}{97}{section*.60}
+\contentsline {subparagraph}{在一个线程中}{97}{section*.60}
+\contentsline {subparagraph}{在另外一个线程中}{97}{section*.61}
 \contentsline {section}{\numberline {13.5}参考}{98}{section.13.5}
 \contentsline {chapter}{\numberline {第十四章\hspace {0.3em}}explicit 关键字}{99}{chapter.14}
 \contentsline {section}{\numberline {14.1}作用}{99}{section.14.1}
-\contentsline {subparagraph}{示例}{99}{section*.61}
+\contentsline {subparagraph}{示例}{99}{section*.62}
 \contentsline {chapter}{\numberline {第十五章\hspace {0.3em}}friend 关键字}{101}{chapter.15}
 \contentsline {section}{\numberline {15.1}目的}{101}{section.15.1}
 \contentsline {section}{\numberline {15.2}友元函数}{101}{section.15.2}
 \contentsline {section}{\numberline {15.3}友元类}{102}{section.15.3}
-\contentsline {subparagraph}{例子}{102}{section*.62}
+\contentsline {subparagraph}{例子}{102}{section*.63}
 \contentsline {chapter}{\numberline {第十六章\hspace {0.3em}}mutable 关键字}{105}{chapter.16}
 \contentsline {section}{\numberline {16.1}目的}{105}{section.16.1}
 \contentsline {section}{\numberline {16.2}示例}{105}{section.16.2}
@@ -216,17 +218,17 @@
 \contentsline {chapter}{\numberline {第十九章\hspace {0.3em}}命名空间}{113}{chapter.19}
 \contentsline {section}{\numberline {19.1}namespace 别名}{113}{section.19.1}
 \contentsline {section}{\numberline {19.2}namespace 扩充}{113}{section.19.2}
-\contentsline {subparagraph}{例子}{113}{section*.63}
+\contentsline {subparagraph}{例子}{113}{section*.64}
 \contentsline {chapter}{\numberline {第二十章\hspace {0.3em}}引用}{115}{chapter.20}
 \contentsline {section}{\numberline {20.1}引用 创建时 必须初始化}{115}{section.20.1}
 \contentsline {section}{\numberline {20.2}引用不能重定义}{115}{section.20.2}
 \contentsline {section}{\numberline {20.3}函数中的引用}{115}{section.20.3}
-\contentsline {subparagraph}{例子3.1}{116}{section*.64}
+\contentsline {subparagraph}{例子3.1}{116}{section*.65}
 \contentsline {section}{\numberline {20.4}引用 右值}{116}{section.20.4}
-\contentsline {subparagraph}{参考网址}{116}{section*.65}
-\contentsline {subparagraph}{右值引用的声明期限}{116}{section*.66}
-\contentsline {subparagraph}{类型不确定性}{117}{section*.67}
-\contentsline {subparagraph}{完美转发}{117}{section*.68}
+\contentsline {subparagraph}{参考网址}{116}{section*.66}
+\contentsline {subparagraph}{右值引用的声明期限}{116}{section*.67}
+\contentsline {subparagraph}{类型不确定性}{117}{section*.68}
+\contentsline {subparagraph}{完美转发}{117}{section*.69}
 \contentsline {chapter}{\numberline {第二十一章\hspace {0.3em}}enum 的使用}{119}{chapter.21}
 \contentsline {section}{\numberline {21.1}定义}{119}{section.21.1}
 \contentsline {section}{\numberline {21.2}使用}{119}{section.21.2}
@@ -239,50 +241,50 @@
 \contentsline {section}{\numberline {24.1}Windows-VisualStudio}{125}{section.24.1}
 \contentsline {subsection}{\numberline {24.1.1}配置全局VC++目录}{125}{subsection.24.1.1}
 \contentsline {subsection}{\numberline {24.1.2}配置第三方程序库-以opencv 示例}{125}{subsection.24.1.2}
-\contentsline {subsubsection}{下载配置所需}{125}{section*.69}
-\contentsline {subparagraph}{1.VisualStudio2010}{125}{section*.70}
-\contentsline {subparagraph}{2.OpenCV2.4.8}{125}{section*.71}
-\contentsline {subsubsection}{安装}{125}{section*.72}
-\contentsline {subparagraph}{1.安装位置不影响}{125}{section*.73}
-\contentsline {subparagraph}{2.配置Path系统环境}{125}{section*.74}
-\contentsline {subsubsection}{配置}{125}{section*.75}
-\contentsline {subparagraph}{1.Create Project}{125}{section*.76}
-\contentsline {subparagraph}{2.配置}{126}{section*.77}
-\contentsline {subsubsection}{编程测试}{126}{section*.78}
+\contentsline {subsubsection}{下载配置所需}{125}{section*.70}
+\contentsline {subparagraph}{1.VisualStudio2010}{125}{section*.71}
+\contentsline {subparagraph}{2.OpenCV2.4.8}{125}{section*.72}
+\contentsline {subsubsection}{安装}{125}{section*.73}
+\contentsline {subparagraph}{1.安装位置不影响}{125}{section*.74}
+\contentsline {subparagraph}{2.配置Path系统环境}{125}{section*.75}
+\contentsline {subsubsection}{配置}{125}{section*.76}
+\contentsline {subparagraph}{1.Create Project}{125}{section*.77}
+\contentsline {subparagraph}{2.配置}{126}{section*.78}
+\contentsline {subsubsection}{编程测试}{126}{section*.79}
 \contentsline {subsection}{\numberline {24.1.3}dll 与 lib 的配置}{126}{subsection.24.1.3}
-\contentsline {subparagraph}{静态lib}{126}{section*.79}
-\contentsline {subparagraph}{动态lib}{126}{section*.80}
+\contentsline {subparagraph}{静态lib}{126}{section*.80}
+\contentsline {subparagraph}{动态lib}{126}{section*.81}
 \contentsline {subsection}{\numberline {24.1.4}常见错误}{126}{subsection.24.1.4}
-\contentsline {subsubsection}{}{126}{section*.81}
-\contentsline {subparagraph}{参考}{126}{section*.82}
+\contentsline {subsubsection}{}{126}{section*.82}
+\contentsline {subparagraph}{参考}{126}{section*.83}
 \contentsline {section}{\numberline {24.2}Linux - Makefile}{126}{section.24.2}
 \contentsline {subsection}{\numberline {24.2.1}Makefile 规则}{127}{subsection.24.2.1}
-\contentsline {subsubsection}{示例}{127}{section*.83}
+\contentsline {subsubsection}{示例}{127}{section*.84}
 \contentsline {subsection}{\numberline {24.2.2}make 执行流程}{127}{subsection.24.2.2}
 \contentsline {subsection}{\numberline {24.2.3}makefile 中使用变量}{128}{subsection.24.2.3}
 \contentsline {subsection}{\numberline {24.2.4}make 的自动推倒}{128}{subsection.24.2.4}
-\contentsline {subparagraph}{进一步自动化}{128}{section*.84}
+\contentsline {subparagraph}{进一步自动化}{128}{section*.85}
 \contentsline {subsection}{\numberline {24.2.5}添加依赖库}{129}{subsection.24.2.5}
 \contentsline {subsection}{\numberline {24.2.6}代码泄漏检测}{129}{subsection.24.2.6}
 \contentsline {subsection}{\numberline {24.2.7}参考文献}{129}{subsection.24.2.7}
 \contentsline {chapter}{\numberline {第二十五章\hspace {0.3em}}调试}{131}{chapter.25}
 \contentsline {section}{\numberline {25.1}Linux - 调试 GDB}{131}{section.25.1}
 \contentsline {subsection}{\numberline {25.1.1}使用 GDB}{131}{subsection.25.1.1}
-\contentsline {paragraph}{-g 编译项目}{131}{section*.85}
-\contentsline {paragraph}{启动 GDB}{131}{section*.86}
-\contentsline {paragraph}{GDB 常用 命令}{131}{section*.87}
-\contentsline {subparagraph}{基础 命令}{131}{section*.88}
-\contentsline {subparagraph}{Help 命令}{132}{section*.89}
+\contentsline {paragraph}{-g 编译项目}{131}{section*.86}
+\contentsline {paragraph}{启动 GDB}{131}{section*.87}
+\contentsline {paragraph}{GDB 常用 命令}{131}{section*.88}
+\contentsline {subparagraph}{基础 命令}{131}{section*.89}
+\contentsline {subparagraph}{Help 命令}{132}{section*.90}
 \contentsline {subsection}{\numberline {25.1.2}参考}{133}{subsection.25.1.2}
 \contentsline {chapter}{\numberline {第二十六章\hspace {0.3em}}工程-细节}{135}{chapter.26}
 \contentsline {section}{\numberline {26.1}语言使用基本问题}{135}{section.26.1}
 \contentsline {subsection}{\numberline {26.1.1}注释格式}{135}{subsection.26.1.1}
-\contentsline {subsubsection}{函数注释}{135}{section*.90}
-\contentsline {subsubsection}{代码注释}{135}{section*.91}
+\contentsline {subsubsection}{函数注释}{135}{section*.91}
+\contentsline {subsubsection}{代码注释}{135}{section*.92}
 \contentsline {subsection}{\numberline {26.1.2}预编译}{136}{subsection.26.1.2}
 \contentsline {subsection}{\numberline {26.1.3}变量问题}{137}{subsection.26.1.3}
-\contentsline {subsubsection}{变量(包括成员)命名}{137}{section*.92}
-\contentsline {subsubsection}{使用}{137}{section*.93}
+\contentsline {subsubsection}{变量(包括成员)命名}{137}{section*.93}
+\contentsline {subsubsection}{使用}{137}{section*.94}
 \contentsline {subsection}{\numberline {26.1.4}运算符使用问题}{137}{subsection.26.1.4}
 \contentsline {subsection}{\numberline {26.1.5}函数问题}{137}{subsection.26.1.5}
 \contentsline {subsection}{\numberline {26.1.6}条件语句问题}{137}{subsection.26.1.6}
@@ -308,8 +310,8 @@
 \contentsline {subsection}{\numberline {26.6.1}类命名问题}{139}{subsection.26.6.1}
 \contentsline {subsection}{\numberline {26.6.2}访问权限}{140}{subsection.26.6.2}
 \contentsline {subsection}{\numberline {26.6.3}区分对象所在处}{140}{subsection.26.6.3}
-\contentsline {subsubsection}{Object on the Stack}{140}{section*.94}
-\contentsline {subsubsection}{Object on the Heap}{140}{section*.95}
+\contentsline {subsubsection}{Object on the Stack}{140}{section*.95}
+\contentsline {subsubsection}{Object on the Heap}{140}{section*.96}
 \contentsline {section}{\numberline {26.7}其他}{140}{section.26.7}
 \contentsline {subsection}{\numberline {26.7.1}预处理}{140}{subsection.26.7.1}
 \contentsline {subsection}{\numberline {26.7.2}异常}{140}{subsection.26.7.2}

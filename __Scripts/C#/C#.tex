@@ -284,6 +284,7 @@
 
 	\newpage
  	\section{委托}
+ 		函数指针
  		\paragraph{定义委托} \fbox{delegate  result-type  Identifier ([parameters]);}
  			\begin{itemize}
  				\item \verb|result-type|:返回值的类型，和\textbf{方法}的返回值类型\textbf{一致}
@@ -334,8 +335,28 @@
 		 		或者 \fbox{objName-=functionName1}
 		 		
 		 		这里的\verb|“-=”|号表示在 \verb|objectName| 的方法列表中减去一个\verb|functionName1|。\textbf{可以在方法列表中多次减去相同的方法}，\textit{减一次只会减一个方法}，\textit{如果列表中无此方法，那么减就没有意义，对原有列表无影响，也不会报错}。
-		 		
+		 
+		 \subsection{Action}
+		 	\verb|Action|是无返回值的泛型委托。
+		 	
+		 	\begin{itemize}
+		 		\item \verb|Action| 表示无参，无返回值的委托
+		 		\item \verb|Action<int,string>| 表示有传入参数int,string无返回值的委托
+		 		\item \verb|Action<int,string,bool>| 表示有传入参数int,string,bool无返回值的委托
+		 		\item \verb|Action<int,int,int,int>| 表示有传入4个int型参数，无返回值的委托
+		 		\item \verb|Action| 至少0个参数，至多16个参数，无返回值。
+		 	\end{itemize}
+		 	
+		 	
+		 	　　 
+		 	
+		 	 　　
+		 	
+		 	       
+		 	
+		 	　　 
 	\section{事件}
+		是委托(函数指针)的集合执行体。
 		\subsection{自定义事件}
 			\paragraph{声明一个委托}\fbox{Delegate result-type delegateName ([parameters]);}
 			
@@ -548,6 +569,13 @@
 			
 		\url{https://blog.csdn.net/chaixinke/article/details/45396269}
 		
-		
+	\section{where T:}
+		泛型的Where能够对类型参数作出限定。有以下几种方式。
+			\begin{itemize}
+				\item \verb|where T : struct| 限制类型\textbf{参数T必须继承自System.ValueType}。
+				\item \verb|where T : class| 限制类型\textbf{参数T必须是引用类型}，也就是不能继承自System.ValueType。
+				\item \verb|where T : new()| 限制类型\textbf{参数T必须有一个缺省的构造函数}
+				\item \verb|where T : NameOfClass| 限制类型\textbf{参数T必须继承自某个类}或实现某个接口。
+			\end{itemize}
 \end{document} 
  		    

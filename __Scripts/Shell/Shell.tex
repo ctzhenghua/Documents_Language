@@ -69,7 +69,8 @@
 	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
 	keywordstyle=\color{blue},       % keyword style
 	stringstyle=\color{mymauve}\ttfamily,     % string literal style
-	frame=single,
+	frame=L,%single,
+	xleftmargin = .052\textwidth,
 	rulesepcolor=\color{red!20!green!20!blue!20},
 	% identifierstyle=\color{red},
 	language=c++,
@@ -135,28 +136,56 @@
 			\subparagraph{环境变量叠加方式}\verb|PATH='$PATH':/root| 
 				将\verb|/root|添加到环境变量中，但是这样更改后，下次重启会消失。如果想要长久生效需要更改配置文件。
 			
-			\subparagraph{执行顺序}执行过程如下所图\ref{env}示\verb|->|
-				\begin{figure}[htb]
+			\subparagraph{执行顺序}
+				\begin{enumerate}[itemindent = 2em]
+					\item \verb|/etc/profile|  
+					\item \verb@~/.bash_profile | ~/.bash_login | ~/.profile @
+					\item \verb|~/.bashrc|
+					\item \verb|/etc/bashrc|
+					\item \verb|~/.bash_logout|
+				\end{enumerate}
+				
+			执行过程如下所图\ref{env}示\verb|->|
+				\begin{figure}[H]
 					\centering
 					\includegraphics[scale=0.3]{env.png}
 					\caption{执行顺序}
 					\label{env}
 				\end{figure}
+			
+				\begin{itemize}
+					\item \verb|/etc/profile| \\ \textbf{当用户第一次登录时,该文件被执行}. 此文件为系统的每个用户设置环境信息,
+					定义\verb|PATH|、LOGNAME、HISTSIZE、HOSTNAME 等，调用\verb|/etc/profile.d/|目录下的所有脚本文件\verb|.sh|并执行。 然后进入用户目录，调用\verb|~/.bash_profile|，追加\verb|PATH|并生效，并间接调用\verb|~/.bashrc|，完成别名定义， 并简介调用\verb|/etc/bashrc| 配置文件完成不用登陆的shell 配置并生效。
+					
+					\begin{lstlisting}
+	此文件为系统的每个用户设置环境信息,
+	/*--当用户第一次登录时,该文件被执行.*/
+	并从/etc/profile.d目录的配置文件中搜集shell的设置.
+	# /etc/profile
+	
+	# System wide environment and startup programs, for login setup
+	# Functions and aliases go in /etc/bashrc
+					\end{lstlisting}
+					\item \verb|/etc/bashrc| \\
+					为每一个运行bash shell的用户执行此文件.当bash shell被打开时,该文件被读取.设置未登录的BASH 环境变量
+					
+					\begin{lstlisting}
+	/*为每一个运行bash shell的用户执行此文件*/.当bash shell被打开时,该文件被读取,每次用户打开一个终端时，即执行此文件
+	# /etc/bashrc
+	
+	# System wide functions and aliases
+	# Environment stuff goes in /etc/profile
+					\end{lstlisting}
+					\item \verb|~/.bash_profile| \\
+					每个用户都可使用该文件输入专用于自己使用的shell信息,\textbf{当用户登录时,该
+					文件仅仅执行一次}!默认情况下,他设置一些环境变量,执行用户的\verb|.bashrc|文件.
+					\item \verb|~/.profile| \\在Debian中使用\verb|.profile|文件代 替\verb|.bash_profile|文件			
+					\item \verb|~/.bashrc| \\
+					设置登录用户的\textbf{别名设置}等私人定义， 并调用配置\verb|/etc/bashrc|
+					\item \verb|~/.bash_logout| \\ 当每次退出系统(退出bash shell)时,执行该文件. 
+				\end{itemize}	
 				
-			\subparagraph{/etc/profile}
-				定义\verb|PATH、LOGNAME、HISTSIZE、HOSTNAME 等|，调用\verb|/etc/profile.d/|目录下的所有脚本文件.sh并执行。
-				
-				然后进入用户目录，调用\verb|~/.bash_profile|，追加\verb|PATH|并生效，并间接调用\verb|~/.bashrc|，完成别名定义， 并简介调用\verb|/etc/bashrc| 配置文件完成不用登陆的shell 配置并生效。
-			
-			\subparagraph{/etc/profile.d/*.sh}这部分脚本主要设置语言等
-			
-			\subparagraph{~/.bash\_profile}设置登陆用户的环境变量\verb|$PATH|， 并调用配置\verb|~/.bashrc|
-			
-			\subparagraph{~/.bashrc}设置登录用户的\textbf{别名设置}， 并调用配置\verb|/etc/bashrc|
-			
-			\subparagraph{/etc/bashrc}设置未登录的BASH 环境变量
-			
-		
+			\subparagraph{参考}\url{https://yq.aliyun.com/articles/47501#comment}
 		\paragraph{source}\verb|source 配置文件 => .  配置文件| 使配置文件生效。
 	
 	\section{字符截取}
@@ -274,7 +303,7 @@
 	echo "there are all files"
 			 \end{lstlisting}
 			 
-			 \paragraph{执行方式}
+			 \subparagraph{执行方式}:
 				 \begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
 	//第一种执行方式:
 	[admin@localhost Shell]$ chmod +x  script.sh
@@ -287,11 +316,14 @@
 				 \end{lstlisting}
 		 
 			 \paragraph{执行过程}
-				 Shel会fork一个子进程并调用exec执行./script.sh这个程序,exec系统调用应该把子进程的代码段替换成./script.sh程序的代码段,并从它的\_start始执行。然而script.sh是个文本文件,根 本没有代码段和\_start函数,怎么办呢?其实exec还有另外一种机制,如果要执行的是一个文本文件,并且第一行 指定了解释器,则用解释器程序的代码段替换当前进程,并且从解释器 的\_start开始执行,而这个文本文件被当作命令行参数传给解释器。因此,执行上述脚本相当于执行程序！
+			 	对于非内置命令,父shell先fork一个子shell，然后子进程去执行bash的代码，从文本中一行一行的读取命令，然后再派生一个孙子进程去执行这些命令。
+			 	
+			 	\begin{figure}[H]
+			 		\centering
+			 		\includegraphics[scale=0.7]{shellProcess}
+			 		\caption{Shell Process}
+			 	\end{figure}
 				 
-				 什么是“子程序”呢？就是说，在我目前这个 shell 的情况下，去启用另一个新的 shell ，新的那个 shell 就是子程序
-				 
-				 这个程序概念与变量有啥关系啊？关系可大了！因为子程序仅会继承父程序的环境变量， 子程序不会继承父程序的自订变量
 				 \begin{enumerate}
 				 	\item 交互式进程（父进程）创建一个子进程用于执行脚本，父进程等待子进程终止
 				 	\item 子进程程序替换bash解释器
@@ -304,7 +336,7 @@
 				 
 				 \subparagraph{注意}注意：像export、cd、env、set 这些内置命令，在键入命令行后，交互式进程不会创建子进程，而是调用bash内部的函数执行这些命令，改变的是交互式进程。
 				 
-				 如果在命令行下，将多个命令用括号括起来，并用分号隔开来执行，交互式进程依然会创建一个子shell执行括号中的命令:
+				 如果在命令行下，将多个命令用括号'()'括起来，并用分号隔开来执行，交互式进程依然会创建一个子shell执行括号中的命令,但是用'\{\}'则不会创建子进程:
 					 \begin{figure}[h]
 					 	\begin{center}
 						 	\includegraphics[scale = 0.5]{figure/ShellBracket.png}
@@ -313,9 +345,10 @@
 					 	\caption{(comands) VS Comands}
 					 \end{figure}
 				 
-				 \textbf{\underline{.} 或者 \underline{source}这两个命令}是Shell的内建命令,\textbf{这种方式不会创建子Shell},\textbf{而是直接在交互式Shell下逐行 执行脚本中的命令}
+				 \subparagraph{source}
+				 	\textbf{\underline{.} 或者 \underline{source}这两个命令}是Shell的内建命令,\textbf{这种方式不会创建子Shell},\textbf{而是直接在交互式Shell下逐行 执行脚本中的命令}
 				 
-				 \subparagraph{Example}
+				 \subparagraph{Example}:
 					 \begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
 
 #!/bin/bash
@@ -339,6 +372,23 @@ ls
 					 
 				shell子进程：\url{https://blog.csdn.net/sosodream/article/details/5683515}
 				
+				
+				\paragraph{export}
+					从这种意义上来说，用户可以有许多 shell，\textbf{每个shell都是由某个shell（称为父shell）派生的}。
+					
+					\textit{在子shell中定义的变量只在该子shell内有效}。如果在一个shell脚本程序中定义了一个变量，
+					当该脚本程序运行时，这个定义的变量只是该脚本程序内的一个局部变量，其他的shell不能引用它，
+					\textbf{要使某个变量的值可以在其他shell中被改变}，\textit{可以使用}\textbf{export命令}对已定义的变量进行输出。
+					
+					
+					\verb|export|命令将\textit{使系统在创建每一个新的shell时}，\textbf{定义这个变量的一个拷贝}。\textbf{这个过程称之为变量输出}。
+					
+					\begin{itemize}
+						\item 一个shell中的\textbf{系统环境变量}会被复制到子shell中（用\textbf{export定义的变量}）
+						\item 一个shell中的\textbf{系统环境变量}\underline{只对}该\textit{shell或者它的子shell}有效，该shell结束时变量消失
+						（并不能返回到父shell中）。
+						\item \textbf{不用export定义的变量只对该shell有效，对子shell也是无效的}
+					\end{itemize}
 		 \section{Shell 变量}
 			 shell变量不需要进行任何声明，直接定义即可，因为shell变量的值实际上都是字符串（对于没有定义的变量默认是一个空串）。定义的时候shell变量由大写字母加下划线组成，并且定义的时候等号两边不能存在空格，否则会被认为是命令！
 			 
@@ -348,7 +398,7 @@ ls
 				 
 				 利用printenv可以显示当前shell进程的环境变量；利用set命令可以显示当前shell进程中的定义的所有变量（包括环境变量和本地变量）和函数。
 				 
-				 一个shell变量定义后仅存在于当前Shell进程,是一个本地变量。用export命令可以把本地变量导出为环境变量。用unset命令可以删除已定义的环境变量或本地变量。
+				 一个shell变量定义后仅存在于当前Shell进程,是一个本地变量。用\verb|export|命令可以把本地变量导出为环境变量。用unset命令可以删除已定义的环境变量或本地变量。
 					 \begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
 	//分步  先定义后导出
 	COUNT=5
@@ -1108,6 +1158,7 @@ ls
 		 	
 		 	
 \chapter{Shell 示例}
+	\section{LeetCode}
 		 \subparagraph{How would you print just the 10th line of a file?}From LeetCode
 			\begin{lstlisting}
 	#!/bin/bash
@@ -1123,7 +1174,55 @@ ls
 	done < file.txt
 			\end{lstlisting}	
 			
+	\section{课程}
+		\subparagraph{添加10个用户}
+			\begin{lstlisting}
+	// Method One!
+	#!/bin/bash
+	for i in {0..10} 
+	do 
+		if /usr/bin/id user$i > /dev/null 2>&1  #将正确结果输出到空洞，返回的0， 对于查询不存在的用户,将输出到空洞，返回1
+			then echo "this user$i have exists"
+		esle
+			useradd user$i && echo "set up user$i success"
+		fi
+	done
+	
+	
+	// Method Two!
+	for i in `seq 1 10`
+	do
+		cut -d: -f1 /etc/passwd |grep "user$i" 2>>/tmp/etc.err || useradd user$i
+	done
+			\end{lstlisting}
 			
+			\verb|>/dev/null 2>&1 |默认情况是1，也就是等同于\verb|1>/dev/null 2>&1|,意思就是\textbf{把标准输出}重定向到“黑洞”，\textbf{还把错误输出2}重定向到\textbf{等同于}1的重定向，也就是标准输出和错误输出都进了“黑洞”
+			
+			\verb|& |表示\textbf{等同于}的意思，\verb|2>&1|，表示2的输出重定向\textbf{等同于}1
+			
+			\textbf{重定向有严格的顺序要求！}
+			
+			\verb|cut -c| 显示该行第几列的东西
+			
+			\verb|cut -c n,m| 显示第n列到第m列的东西
+			
+			\verb|cut -f n [-d :]| 用：进行切分改行, \verb|-f| 表示显示第几列
+
+		\subparagraph{}
+		
+		\subparagraph{}	
+		
+		\subparagraph{}
+		
+		\subparagraph{}
+				
+		\subparagraph{}
+		
+		\subparagraph{}	
+		
+		\subparagraph{}
+		
+		
 \chapter{参考文献}
 	
 		 练习题：\url{https://wenku.baidu.com/view/e6664cafbd64783e08122b4f.html}

@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/W32TeX) (preloaded format=xelatex 2018.7.13)  10 OCT 2018 15:18
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/W32TeX) (preloaded format=xelatex 2018.7.13)  27 DEC 2018 15:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./C#.tex
-(./C#.tex
+**./PHP.tex
+(./PHP.tex
 LaTeX2e <2015/01/01>
 Babel <3.9l> and hyphenation patterns for 79 languages loaded.
 (c:/texlive/2015/texmf-dist/tex/latex/ctex/ctexbook.cls
@@ -1938,18 +1938,15 @@ ternalshared.code.tex))
 (c:/texlive/2015/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2014/09/06 1.5e listings language file
 )
-(c:/texlive/2015/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2014/09/06 1.5e listings language file
-)
-(c:/texlive/2015/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
+(c:/texlive/2015/texmf-dist/tex/latex/listings/lstlang2.sty
+File: lstlang2.sty 2014/09/06 1.5e listings language file
 )
 (c:/texlive/2015/texmf-dist/tex/xelatex/xecjk/xeCJK-listings.sty
 Package: xeCJK-listings 2015/05/15 v3.3.2 xeCJK patch file for listings
 \l__xeCJK_listings_max_char_int=\count212
 \l__xeCJK_listings_flag_int=\count213
-) (./C#.aux)
-\openout1 = `C#.aux'.
+) (./PHP.aux)
+\openout1 = `PHP.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 108.
 LaTeX Font Info:    ... okay on input line 108.
@@ -2090,9 +2087,10 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 108.
 LaTeX Info: Redefining \pageref on input line 108.
 LaTeX Info: Redefining \nameref on input line 108.
- (./C#.out) (./C#.out)
+
+(./PHP.out) (./PHP.out)
 \@outlinefile=\write6
-\openout6 = `C#.out'.
+\openout6 = `PHP.out'.
 
 \g__fontspec_family_SimHei_int=\count216
 .................................................
@@ -2139,7 +2137,6 @@ LaTeX Font Info:    Try loading font information for U+msa on input line 110.
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 110.
-
 (c:/texlive/2015/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
@@ -2188,7 +2185,15 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [2
 
-]
+] (./PHP.toc
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [3])
+\tf@toc=\write7
+\openout7 = `PHP.toc'.
+
+
+[4]
 第一章
 \g__fontspec_family_FangSong_int=\count218
 .................................................
@@ -2206,7 +2211,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 . 
 . Could not resolve font FangSong/I (it probably doesn't exist).
 .................................................
-LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 112
+LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 113
 .
 (c:/texlive/2015/texmf-dist/tex/latex/euenc/eu1lmtt.fd
 File: eu1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -2235,47 +2240,49 @@ File: eu1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 . and font adjustment code:
 . 
 .................................................
+ [5
 
-Overfull \hbox (6.25404pt too wide) in paragraph at lines 112--113
-[]\EU1/SimSun(0)/m/n/12 面 试 题 学 习 \EU1/lmr/m/n/12 C# Unity :[][]$[][][][][] [] 
-[] [] [][][][] [] [][][][] [] [][][] [] [][] [] [][][][][][][][] [] [][][][][][
-][] [] [][][][][][][] [] [][][][][][][][] []
- []
-
-[3] [4] [5] [6]
-第二章
-
-Underfull \vbox (badness 3849) has occurred while \output is active []
-
- [7
+] [6] [7] [8
 
 ]
-[8] [9]
-Overfull \hbox (14.87175pt too wide) in paragraph at lines 328--330
- []\EU1/lmr/bx/n/12 +=[] [] \EU1/SimSun(0)/m/n/12 或 者 [] 
+第二章
+[9] [10] [11] [12] [13] [14]
+Underfull \vbox (badness 1917) has occurred while \output is active []
+
+ [15]
+[16] [17] [18]
+File: figure/fuzhi.jpg Graphic file (type QTm)
+ <use  "figure/fuzhi.jpg" >
+File: figure/yinyong.jpg Graphic file (type QTm)
+ <use  "figure/yinyong.jpg" >
+Overfull \hbox (11.34598pt too wide) in paragraph at lines 567--568
+[]\EU1/SimSun(0)/m/n/12 对 象 编 号、|  克 隆、|  对 象 模 型：| [][]$[][][][][] [] [] [] []
+[][][] [] [][][][] [] [][][] [] [][][][][][][][][][] [] [][][][][][][] [] [][][
+][][][][] [] [][][][][][][][]$[][] 
  []
 
-[10] [11] [12]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[19] [20
 
- [13]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+]
+第三章
+[21] [22
 
- [14]
-[15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 552.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 552.
- (./C#.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 552.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 552.
+]
+第四章
+[23]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 587.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 587.
+ (./PHP.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 587.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 587.
  ) 
 Here is how much of TeX's memory you used:
- 44659 strings out of 493706
- 932591 string characters out of 6148913
- 1048232 words of memory out of 5000000
- 47363 multiletter control sequences out of 15000+600000
+ 46227 strings out of 493706
+ 955464 string characters out of 6148913
+ 1244112 words of memory out of 5000000
+ 48916 multiletter control sequences out of 15000+600000
  11646 words of font info for 82 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
- 63i,7n,75p,10410b,1769s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,7n,75p,10411b,3009s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on C#.pdf (15 pages).
+Output written on PHP.pdf (23 pages).

@@ -100,7 +100,7 @@
 	xleftmargin = .06\textwidth,
 	rulesepcolor=\color{red!20!green!20!blue!20},
 	% identifierstyle=\color{red},
-	language=c++,
+	language=php,
 }
  \author{\kaishu 郑华}
  \title{\heiti PHP 学习笔记}
@@ -191,10 +191,28 @@
  		 		
 \chapter{基本语法}
 	\section{变量}
-		随身携带\verb|$|
 		
-		使用\textbf{其他文件变量}时，使用\verb|include 'fileName'|
+		\paragraph{变量}
+			随身携带\verb|$|
+			
+			使用\textbf{其他文件变量}时，使用\verb|include 'fileName'|
 		
+		\paragraph{传值}
+			就是单纯的将值赋值给形参，和copy是一样的
+			
+		\paragraph{传引用}
+			类似于C++语言的引用
+			
+			\begin{lstlisting}
+<?php    
+	$param2=1;               //定义变量2    
+	$param1 = &$param2;      //将变量2的引用传给变量1    
+	echo $param2;            //显示为1    
+	$param1 = 2;             //把2赋值给变量1    
+	echo $param2;            //显示为2    
+?> 
+			\end{lstlisting}
+			
 	\section{作用域}
 		\begin{itemize}
 			\item 局部变量
@@ -210,8 +228,57 @@
 				\item \verb|PHP $_POST |变量是一个数组，内容是由 HTTP POST 方法发送的变量名称和值。可以在网址的栏目上是\textbf{看不到}传送的内容的
 				\item \verb|PHP $_GET |变量是一个数组，内容是由 HTTP GET 方法发送的变量名称和值。可以在网址的栏目是\textbf{看到}内容的
 			\end{itemize}
+		
+		\paragraph{花括号的区别}
+			很多语言都以花括号作为作用域界限，PHP中只有函数的花括号才构成新的作用域。
+			
+			\url{https://www.cnblogs.com/52php/p/5670067.html}	
+	\section{数组}
+		\paragraph{形式}
+			\begin{itemize}
+				\item 普通数组：\verb|$cars = array("Volvo","BMW","Toyota");|
+				\item 键值数组：\verb|$cars = array("Volvo"=>"30","BMW"=>"40","Toyota"=>"50");|
+				\item 二维数组：
+					\begin{lstlisting}
+	$cars = array(
+		array("volvo",100,96),
+		array("bmw",99,34),
+		array("toyota",33,24)
+	);
+					\end{lstlisting}
+				\item 新写法:\verb|$cars= ["2","3","5"];|
+				\item 初始化新方法：
+					\begin{lstlisting}
+	$arr = array(5 => 1, 12 => 2);
+	
+	$arr[] = 56;    // This is the same as $arr[13] = 56;
+	                // at this point of the script
+					\end{lstlisting}
+			\end{itemize}
+			
+		
+		\subsection{数组函数}
+			\begin{itemize}
+				\item \verb|count($arrVar) :统计数组变量个数|
+				\item \verb|foreach($arrVar as $varElement)|
+				\item \verb|foreach($arrKeyVar as $keyElement => $valueElement )|
+				\item \verb|array_keys()| 返回数组中所有的键名
+				\item \verb|array_pop()| 出栈
+				\item \verb|array_push()| 入栈
+				\item \verb|array_rand()| 随机选出一个或多个元素
+				\item \verb|array_shift()| 删除数组中的第一个元素，并返回删除元素的值，出队
+				\item \verb|in_array()| 检查数组中是否存在指定的值
+			\end{itemize}	
 			
 	
+	\section{字符串函数}
+		\begin{itemize}
+			\item \verb|explode()| 将字符串转化成数组
+			\item \verb|implode()| 将数组合并成一个字符串，等价于\verb|join()|
+			\item \verb|trim()| 去掉字符串两边的字符
+			\item \verb|md5()| 计算字符串的md5散列
+			\item \verb|str_replace()| 替换字符串中的一些字符。
+		\end{itemize}		
 	\section{面向对象}
 		与c++  大致一致，需要注意一下特性。
 		\begin{itemize}
@@ -312,10 +379,10 @@
 	move_uploaded_file($file['tmp_name'], $fileName);
 		\end{lstlisting}
 	
-	\section{cookie}
+	\section{Cookie}
 		什么是cookie
 		
-		服务器在客户端保存用户的信息，比如登录名，密码等
+		服务器\textbf{在客户端保存用户的信息}，比如登录名，密码等
 		
 		这些数据就像小甜饼一样，数据量并不大，服务器端在需要的时候可以从客户端读取，保存在客户端的浏览器缓存目录下
 
@@ -332,7 +399,26 @@
 			\item 替代方案：URL参数
 		\end{itemize}
 		
-	\section{session}
+		\begin{lstlisting}
+	setcookie('user','zhenghua'); //设置一个cookie, 存储cookie 信息到浏览器
+	
+	setcookie('sex', 'male', time() +30); // 设置过期时间为30s
+	setcookie('sex', 'male', time() -3600); // 删除cookie
+	
+	/*
+	 * 1. 名字
+	 * 2. 键值
+	 * 3. 过期时间
+	 * 4. path cookie路径， 针对url的路径
+	 * 5. domain 域名，针对哪个域名生效
+	*/
+	var_dump($_COOKIE); //取出cookie
+		\end{lstlisting}
+		
+	\section{Session}
+		Session 对象\textbf{存储特定用户会话}所需的\textbf{属性及配置信息}。这样，当用户在应用程序的 Web 页之间跳转时，存储在 Session 对象中的变量将不会丢失，而是在整个用户会话中一直存在下去。当用户请求来自应用程序的 Web 页时，如果该用户还没有会话，则 Web 服务器将自动创建一个 Session 对象。当会话过期或被放弃后，服务器将终止该会话。\textbf{Session 对象最常见的一个用法就是存储用户的首选项}。\textit{例如，如果用户指明不喜欢查看图形，就可以将该信息存储在 Session 对象中}。
+		
+		\verb|session_start()  $_SESSION|
 		\begin{itemize}
 			\item 数据存储在服务器
 			\item 特点：
@@ -341,8 +427,152 @@
 					\item 安全
 					\item 不依赖浏览器环境
 					\item 服务器端会为每一个用户用一个ID来标识
+					\item 短链接
 				\end{itemize}
 		\end{itemize}
+		
+		客户端请求后，服务端返回一个session，客户端然后存储在cookie 中
+	
+	\section{Token 验证}
+		在Web领域基于Token的身份验证随处可见。在大多数使用Web API的互联网公司中，tokens 是多用户下处理认证的最佳方式。特点如下：
+			\begin{itemize}[itemindent = 1em]
+				\item 无状态、可扩展
+				\item 支持移动设备
+				\item 跨程序调用
+				\item 安全
+			\end{itemize}
+		
+		\subsection{基于服务器的验证}
+			我们都是知道\textbf{HTTP协议}是无状态的，\textit{这种无状态意味着程序需要验证每一次请求，从而辨别客户端的身份}。
+			
+			在这之前，程序都是通过在服务端存储的登录信息来辨别请求的。这种方式一般都是通过存储Session来完成。
+			随着Web，应用程序，已经移动端的兴起，这种验证的方式逐渐暴露出了问题。尤其是在可扩展性方面。
+			
+			\begin{itemize}[itemindent  =1em]
+				\item \textbf{Seesion}：每次认证用户发起请求时，服务器需要去创建一个记录来存储信息。当越来越多的用户发请求时，内存的开销也会不断增加。
+				\item \textbf{可扩展性}：在服务端的内存中使用Seesion存储登录信息，伴随而来的是可扩展性问题。
+				\item \textbf{CORS(跨域资源共享)}：当我们需要让数据跨多台移动设备上使用时，跨域资源的共享会是一个让人头疼的问题。在使用Ajax抓取另一个域的资源，就可以会出现禁止请求的情况。
+				\item \textbf{CSRF(跨站请求伪造)}：用户在访问银行网站时，他们很容易受到跨站请求伪造的攻击，并且能够被利用其访问其他的网站。
+			\end{itemize}
+		
+		\subsection{基于Token的验证原理}
+			基于Token的身份验证是无状态的，我们不将用户信息存在服务器或Session中。这种概念解决了在服务端存储信息时的许多问题.
+			
+			\verb|NoSession|意味着你的程序可以根据需要去增减机器，而不用去担心用户是否登录。
+			
+			基于Token的身份验证的过程如下：
+			\begin{enumerate}[itemindent = 1em]
+				\item \textbf{用户通过用户名和密码发送请求}
+				\item \textbf{程序验证}
+				\item \textbf{程序返回一个签名的token 给客户端}
+				\item \textbf{客户端储存token,并且每次用于每次发送请求}
+				\item \textbf{服务端验证token并返回数据}
+			\end{enumerate}
+	
+			每一次请求都需要token。\textit{token应该在HTTP的头部发送从而保证了Http请求无状态}。我们同样通过设置服务器属性\textit{Access-Control-Allow-Origin:*} ，让服务器能接受到来自所有域的请求。需要主要的是，在ACAO头部标明(designating)*时，不得带有像HTTP认证，客户端SSL证书和cookies的证书。
+			
+			\subparagraph{示例}\verb|->|
+				\begin{lstlisting}
+	//用户第一次登录
+	username pwd client_type 
+	//接口判断
+	if(token&uid)
+	{
+	    查询token表
+	    $token=where uid =uid 
+	    if($token==token)
+	    {
+	       登录成功！！
+	       返回token 和 uid
+	    }
+	    else
+	    {
+	       登录失败！！
+	    }
+	}
+	
+	if(usename powd client_type)
+	{
+	    检验用户名和密码
+	    if(正确)
+	    {
+  	        得到uid 并 生成token( md5(uid.pwd.time() 自己定义规则) )
+	        if(uid不存在)
+	        {
+	            into token 表   id uid token
+	        }
+	        else
+	        {
+	            where uid=$uid 修改token
+	        }
+	        返回token 和 uid
+	    }
+	    else
+	    {
+	        返回错误信息；    
+	    }
+	}
+	
+	客户端c进行文件存储uid 和token
+	下次再次登录时使用uid和token
+				\end{lstlisting}
+				
+		当我们在程序中认证了信息并取得token之后，我们便能通过这个Token做许多的事情。
+		
+		我们甚至能基于创建一个基于权限的token传给第三方应用程序，这些第三方程序能够获取到我们的数据（当然只有在我们允许的特定的token）
+	\section{PHP 传值}
+		\verb|&$variable |传引用
+		
+		\verb|$variable |传值	
+		
+		
+		面向对象的内存分布如下，变量指向该对象的编号，然后该编号(系统控制)又指向内存，因此，对于对象的传值和引用相当于改变对象变量和对象编号的赋值条件。如果是对象变量赋值，则是对该变量复制一份对象编号，而该编号还是指向该对象内存； 如果是对象引用赋值，则是将对象编号也绑定到该变量身上。
+			\begin{itemize}[itemindent = 1em]
+				\item 对象变量
+				\item 对象编号
+				\item 对象内存
+			\end{itemize}
+			
+			\begin{lstlisting}
+	//对象的值传递示例：
+	$o1 = new C1();
+	$o2 = $o1;
+	$o1->p1 = 2;
+	echo "o1->p1={$o1->p1},o2->p1 = {$o2->p1}";  //o1->p1=2,o2->p1 = 2		
+			\end{lstlisting}
+			对象赋值内存效果如下：
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.5]{fuzhi}
+				\caption{对象赋值}
+			\end{figure}
+			
+			\begin{lstlisting}
+	//对象的引用类型传递：
+	$o3 = new C1();
+	$o4 = &$o3;
+	$o3->p1 = 2;
+	echo "o3->p1={$o3->p1},o4->p1 = {$o4->p1}";  //o3->p1=2,o4->p1 = 2
+			\end{lstlisting}
+			对象引用拷贝内存效果如下：
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.47]{yinyong}
+				\caption{对象引用}
+			\end{figure}
+			
+			
+		对象编号、克隆、对象模型：\url{https://blog.csdn.net/mizhenxiao/article/details/51909398}
+	
+	
+	\section{闭包}
+		闭包的语法很简单，需要注意的关键字就只有use，\textbf{use意思是连接闭包和外界变量}。
+		\begin{lstlisting}
+	$a =function()use($b) {}
+		\end{lstlisting}
+		
 		
 \chapter{开发事宜}
  

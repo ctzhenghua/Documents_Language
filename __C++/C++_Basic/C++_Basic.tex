@@ -1321,6 +1321,52 @@ inline FuncX(...){}
 	ListNode * ptr = new ListNode(0);	//不用typedef 就可以当类型用，如同类，可以理解为公开的类			
 			\end{lstlisting} 
          
+         
+         \subsection{变长结构体}
+         	\begin{lstlisting}
+	struct MyData 
+	{
+	    int nLen;
+	    char data[0];
+	};
+	sizeof(MyData)=4;
+         	\end{lstlisting}
+         
+       \textbf{sizeof 等于4 很纳闷吧}，可能有的编译器不支持\verb|char data[0]|;需要用\verb|char data[1]|；代替，这样上面结构体大小是\verb|sizeof(MyData)=8(字节对齐）|；  
+       
+       在上结构中，\verb|data是一个数组名|；但该数组没有元素；\textbf{该数组的真实地址紧随结构体MyData之后}，而这个地址就是结构体后面数据的地址（\textbf{如果给这个结构体分配的内容大于这个结构体实际大小，后面多余的部分就是这个data的内容}），这种声明方法可以巧妙的实现C语言里的数组扩展。
+       
+       \begin{lstlisting}
+	
+	struct MyData 
+	{
+	    int nLen;
+	    char data[0];		
+	};
+	
+	typedef struct
+	{
+	    int data_len;
+	    char *data;
+	}buff_st_2;
+	
+	char str[10] = "123456789";
+	cout << "Size of MyData: " << sizeof(MyData) << endl;
+	cout << "Size of buff_st_2: " << sizeof(buff_st_2) << endl;
+	MyData *myData = (MyData*)malloc(sizeof(MyData) + 10);
+	memcpy(myData->data,  str, 10);
+	cout << "myData's Data is: " << myData->data << endl;
+	
+	//Size of MyData: 4
+	//Size of buff_st_2: 8
+	//myData's Data is: 123456789  
+       \end{lstlisting}
+       
+       
+       \paragraph{注意}
+       		\verb|data[0]和data[]|\textbf{不占用空间}，且地址紧跟在结构后面，而\verb|char *data|\textbf{作为指针，占用4个字节}，\textit{地址不在结构之后}
+       	
+       	\url{https://www.cnblogs.com/Anker/p/3744127.html}	
 	\section{Union}     
         \subsection{定义} 
 	        union又名共用体，假设定义结构为
