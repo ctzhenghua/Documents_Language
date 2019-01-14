@@ -42,3 +42,4 @@
 \contentsline {chapter}{\numberline {第三章\hspace {0.3em}}开发事宜}{21}{chapter.3}
 \contentsline {chapter}{\numberline {第四章\hspace {0.3em}}工具}{23}{chapter.4}
 \contentsline {section}{\numberline {4.1}PhpStorm}{23}{section.4.1}
+\contentsline {section}{\numberline {4.2}Xdebug}{23}{section.4.2}
