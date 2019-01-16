@@ -1,0 +1,99 @@
+\contentsline {chapter}{\numberline {第一章\hspace {0.3em}}Bash 基本功能}{5}{chapter.1}
+\contentsline {section}{\numberline {1.1}基本}{5}{section.1.1}
+\contentsline {paragraph}{history}{5}{section*.2}
+\contentsline {paragraph}{alias}{5}{section*.3}
+\contentsline {paragraph}{命令执行时顺序}{5}{section*.4}
+\contentsline {paragraph}{Bash 快捷键}{5}{section*.5}
+\contentsline {paragraph}{环境变量配置文件}{6}{section*.6}
+\contentsline {subparagraph}{环境变量叠加方式}{6}{section*.7}
+\contentsline {subparagraph}{执行顺序}{6}{section*.8}
+\contentsline {subparagraph}{参考}{8}{section*.9}
+\contentsline {paragraph}{source}{8}{section*.10}
+\contentsline {section}{\numberline {1.2}字符截取}{8}{section.1.2}
+\contentsline {paragraph}{grep}{8}{section*.11}
+\contentsline {paragraph}{cut}{8}{section*.12}
+\contentsline {section}{\numberline {1.3}awk}{9}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}基本使用}{9}{subsection.1.3.1}
+\contentsline {paragraph}{使用格式}{9}{section*.13}
+\contentsline {subparagraph}{条件 Pattern}{9}{section*.14}
+\contentsline {subparagraph}{动作 Action}{9}{section*.15}
+\contentsline {paragraph}{例子}{9}{section*.16}
+\contentsline {subsection}{\numberline {1.3.2}awk 编程}{9}{subsection.1.3.2}
+\contentsline {paragraph}{使用格式}{9}{section*.17}
+\contentsline {subparagraph}{BEGIN}{9}{section*.18}
+\contentsline {subparagraph}{FS内置变量}{10}{section*.19}
+\contentsline {subparagraph}{END}{10}{section*.20}
+\contentsline {subparagraph}{关系运算}{10}{section*.21}
+\contentsline {section}{\numberline {1.4}sed}{10}{section.1.4}
+\contentsline {paragraph}{使用格式}{10}{section*.22}
+\contentsline {paragraph}{动作}{10}{section*.23}
+\contentsline {chapter}{\numberline {第二章\hspace {0.3em}}Shell 基本知识}{13}{chapter.2}
+\contentsline {section}{\numberline {2.1}Shell}{13}{section.2.1}
+\contentsline {section}{\numberline {2.2}Shell 执行脚本}{13}{section.2.2}
+\contentsline {subparagraph}{Example:}{13}{section*.24}
+\contentsline {subparagraph}{执行方式}{13}{section*.25}
+\contentsline {paragraph}{执行过程}{14}{section*.26}
+\contentsline {subparagraph}{注意}{14}{section*.27}
+\contentsline {subparagraph}{source}{15}{section*.28}
+\contentsline {subparagraph}{Example}{15}{section*.29}
+\contentsline {paragraph}{export}{16}{section*.30}
+\contentsline {section}{\numberline {2.3}Shell 变量}{16}{section.2.3}
+\contentsline {paragraph}{shell变量的种类}{16}{section*.31}
+\contentsline {subparagraph}{环境变量：}{16}{section*.32}
+\contentsline {subparagraph}{本地变量：}{16}{section*.33}
+\contentsline {subparagraph}{变量引用：}{17}{section*.34}
+\contentsline {subparagraph}{只读变量}{17}{section*.35}
+\contentsline {subparagraph}{删除变量}{17}{section*.36}
+\contentsline {subparagraph}{Shell 字符串}{18}{section*.37}
+\contentsline {subparagraph}{Shell 数组}{18}{section*.38}
+\contentsline {subparagraph}{Shell 注释}{19}{section*.39}
+\contentsline {section}{\numberline {2.4}Shell 通配符、命令代换、单引号、双引号}{19}{section.2.4}
+\contentsline {section}{\numberline {2.5}Shell 传递参数}{19}{section.2.5}
+\contentsline {section}{\numberline {2.6}Shell 各种括号}{20}{section.2.6}
+\contentsline {paragraph}{( )-小括号}{20}{section*.40}
+\contentsline {paragraph}{(( ))-双小括号}{20}{section*.41}
+\contentsline {paragraph}{[ ]-中括号}{21}{section*.42}
+\contentsline {paragraph}{[[ ]]-双中括号}{21}{section*.43}
+\contentsline {paragraph}{\{ \}-大括号}{22}{section*.44}
+\contentsline {paragraph}{\{\}常规用法}{22}{section*.45}
+\contentsline {paragraph}{\{\}特殊的替换用法}{22}{section*.46}
+\contentsline {paragraph}{\{\}模式匹配替换用法}{23}{section*.47}
+\contentsline {paragraph}{\{\}字符串提取和替换}{24}{section*.48}
+\contentsline {section}{\numberline {2.7}参考}{24}{section.2.7}
+\contentsline {chapter}{\numberline {第三章\hspace {0.3em}}Shell 运算操作}{25}{chapter.3}
+\contentsline {section}{\numberline {3.1}算数运算}{25}{section.3.1}
+\contentsline {section}{\numberline {3.2}关系运算}{26}{section.3.2}
+\contentsline {section}{\numberline {3.3}布尔运算}{27}{section.3.3}
+\contentsline {section}{\numberline {3.4}逻辑运算}{28}{section.3.4}
+\contentsline {section}{\numberline {3.5}字符串运算}{28}{section.3.5}
+\contentsline {section}{\numberline {3.6}文件测试运算}{29}{section.3.6}
+\contentsline {chapter}{\numberline {第四章\hspace {0.3em}}Shell 脚本控制结构}{33}{chapter.4}
+\contentsline {section}{\numberline {4.1}两种判断格式}{33}{section.4.1}
+\contentsline {paragraph}{test 选项}{33}{section*.49}
+\contentsline {paragraph}{[空格 条件 空格]}{33}{section*.50}
+\contentsline {section}{\numberline {4.2}if-else}{33}{section.4.2}
+\contentsline {section}{\numberline {4.3}while}{33}{section.4.3}
+\contentsline {subparagraph}{let 命令}{33}{section*.51}
+\contentsline {section}{\numberline {4.4}for}{34}{section.4.4}
+\contentsline {section}{\numberline {4.5}until}{34}{section.4.5}
+\contentsline {section}{\numberline {4.6}case}{35}{section.4.6}
+\contentsline {section}{\numberline {4.7}continue,break}{35}{section.4.7}
+\contentsline {chapter}{\numberline {第五章\hspace {0.3em}}Shell 函数}{37}{chapter.5}
+\contentsline {section}{\numberline {5.1}函数定义}{37}{section.5.1}
+\contentsline {subparagraph}{注意}{37}{section*.52}
+\contentsline {section}{\numberline {5.2}函数参数}{38}{section.5.2}
+\contentsline {chapter}{\numberline {第六章\hspace {0.3em}}Shell 脚本调用已有脚本}{41}{chapter.6}
+\contentsline {subparagraph}{Example}{41}{section*.53}
+\contentsline {chapter}{\numberline {第七章\hspace {0.3em}}Shell 示例}{43}{chapter.7}
+\contentsline {section}{\numberline {7.1}LeetCode}{43}{section.7.1}
+\contentsline {subparagraph}{How would you print just the 10th line of a file?}{43}{section*.54}
+\contentsline {section}{\numberline {7.2}课程}{43}{section.7.2}
+\contentsline {subparagraph}{添加10个用户}{43}{lstlisting.7.-32}
+\contentsline {subparagraph}{}{44}{section*.56}
+\contentsline {subparagraph}{}{44}{section*.57}
+\contentsline {subparagraph}{}{44}{section*.58}
+\contentsline {subparagraph}{}{44}{section*.59}
+\contentsline {subparagraph}{}{44}{section*.60}
+\contentsline {subparagraph}{}{44}{section*.61}
+\contentsline {subparagraph}{}{44}{section*.62}
+\contentsline {chapter}{\numberline {第八章\hspace {0.3em}}参考文献}{45}{chapter.8}
