@@ -266,11 +266,49 @@
 				\item \verb|array_pop()| 出栈
 				\item \verb|array_push()| 入栈
 				\item \verb|array_rand()| 随机选出一个或多个元素
-				\item \verb|array_shift()| 删除数组中的第一个元素，并返回删除元素的值，出队
+				\item \verb|array_shift()| \textbf{删除数组中的第一个元素，并返回删除元素的值}，出队
 				\item \verb|in_array()| 检查数组中是否存在指定的值
 			\end{itemize}	
 			
 	
+	\section{回调函数}
+		\subsection{call\_user\_func}
+			\verb|call_user_func(function, parameters)|
+			
+			普通方法直接传递方法名即可，对于类则需要如下使用。
+			
+			\begin{lstlisting}
+	<?php
+	//定义类的命名空间
+	namespace Home;
+	class Space{
+	    //静态方法
+	    static public function _call($num){
+	        return $num +=10;
+	    }
+	    //普通方法
+	    public function _func(){
+	        return func_get_args();//返回函数的参数
+	    }
+	}
+	//针对静态方法，有两种调用方式
+	//1.可以用array(__NAMESPACE__.'\类名','方法名')传递类方法，也就是：array('命名空间\类名','方法名')
+	$return = call_user_func(array(__NAMESPACE__.'\Space','_call'),10);
+	//2.可以用····    __NAMESPACE__.'\类名::方法名'    ···传递类方法，也就是：'命名空间\类名::方法名'
+	$return1 = call_user_func('Home\Space::_call',100);
+	var_dump($return);
+	var_dump($return1);
+	//针对普通方法，不用传入命名空间即可调用，如下
+	$o = new Space;
+	$return = call_user_func(array($o,'_func'),1,2,3,4,5);
+	var_dump($return);
+			\end{lstlisting}
+		\subsection{call\_user\_func\_array}
+			\verb|call_user_func_array(function, parameters)|
+			
+			这个函数的调用和作用和\verb|call_user_func|函数基本一样，所不同的是，\verb|call_user_func_array|函数只能传递两个参数，第一个是回调函数名，或者匿名函数，或者类方法，\textbf{第二个参数则是数组}.
+		
+			\verb|call_user_func_array|是利用回调函数\textbf{处理数组}，而\verb|call_user_func|则是利用回调函数\textbf{处理字符串}，他们两个的根本差别就在这里了.
 	\section{字符串函数}
 		\begin{itemize}
 			\item \verb|explode()| 将字符串转化成数组

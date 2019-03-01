@@ -43,6 +43,7 @@
 \setcounter{tocdepth}{4}
 \geometry{left=1.6cm,right=1.8cm,top=2cm,bottom=1.7cm} %设置文章宽度
 %设置页面布局
+\linespread{1.0}
 \pagestyle{plain}
 \author{\kaishu 郑华}
 \title{\textbf{C++\_Basic 总结}}
@@ -2653,6 +2654,8 @@ inline FuncX(...){}
 			\item \textbf{不做常量合并}、常量传播等优化
 			\item \textbf{对volatile变量的读写不会被优化掉}。如果你对一个变量赋值但后面没用到，编译器常常可以省略那个赋值操作，然而对Memory Mapped IO的处理是不能这样优化的。
 		\end{enumerate}
+	
+	在缓存中，有\textbf{缓冲行}的概念，如果修改后，则这个缓存中的所有记录都比较为invalidate，需要重新读，加载到缓存。我想这个过程就是Volatile.因而在设计的过程中，往往如果局部访问时比较快，而如果修改局部变量时，如果再读旁边的变量时(在一个缓冲行范围)，需要重新加载缓存行。
 	
 	\section{示例}
 		\verb|volatile| 关键字是一种类型修饰符，\textbf{用它声明的类型变量表示可以被某些编译器未知的因素更改}，\textit{比如：操作系统、硬件或者其它线程等。遇到这个关键字声明的变量}，\textbf{编译器对访问该变量的代码就不再进行优化，从而可以提供对特殊地址的稳定访问}。
