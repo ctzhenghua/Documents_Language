@@ -38,7 +38,7 @@
 \setlength{\textheight}{24.00cm}    % 24.62
 
 %%%% 下面的命令设置行间距与段落间距 %%%%
-\linespread{1.4}
+\linespread{1.0}
 \setlength{\parskip}{0.5\baselineskip}
 \geometry{left=1.6cm,right=1.8cm,top=2cm,bottom=1.7cm} %设置文章宽度
 \pagestyle{plain} 		  %设置页面布局
@@ -73,7 +73,7 @@
 	xleftmargin = .052\textwidth,
 	rulesepcolor=\color{red!20!green!20!blue!20},
 	% identifierstyle=\color{red},
-	language=c++,
+	language=bash,
 }
  \author{\kaishu 郑华}
  \title{Shell 笔记}
@@ -285,14 +285,11 @@
   
   	
 \chapter{Shell 基本知识}
-		 \section{Shell}
-			 \textbf{Shell就是一个命令行解释器}，它的作用是解释执行用户的命令,用户输入一条命令,Shell就解释执行一条,这种方式称为交互式(Interactive)
-			 
-			 Shell还有一种执行命令的方式称为\textbf{批处理(Batch)},\textit{用户事先写一个Shell脚本(Script)},\textbf{其中有很多条命令,让Shell一次把这些命令执行完,而不必一条一条地敲 命令}。Shell脚本和编程语言很相似,也有变量和流程控制语句,包括循环和分支。但\textbf{Shell脚本是解释执行的,不需 要编译,Shell程序从脚本中一行一行读取并执行这些命令,相当于一个用户把脚本中的命令一行一 行敲到Shell提示符下执行}。作为程序设计语言，它虽然不是 Linux系统内核的一部分，但它调用了系统内核的大部分功能来执行程序、创建文档并以并行的方式协调各个程序的运行
+
 		 \section{Shell 执行脚本}
 			 shell执行脚本是一门解释性语言、批量化处理语言，大大的节省了工作成本，shell\textbf{脚本第一行必须以}\verb|#!|\textbf{开头}，\textit{它表示该脚本使用后面的解释器解释执行}。
 			 
-			\subparagraph{Example:}
+			\subparagraph{Example}
 			 //script.sh   注：这是一个文本文件
 			 \begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
 	#!/bin/bash
@@ -392,9 +389,15 @@ ls
 		 \section{Shell 变量}
 			 shell变量不需要进行任何声明，直接定义即可，因为shell变量的值实际上都是字符串（对于没有定义的变量默认是一个空串）。定义的时候shell变量由大写字母加下划线组成，并且定义的时候等号两边不能存在空格，否则会被认为是命令！
 			 
-			 \paragraph{shell变量的种类}
-				 \subparagraph{环境变量：}shell进程的环境变量可以从当前shell进程传给fork出来的子进程
-				 \subparagraph{本地变量：}只存在于当前shell进程
+			 \subsection{shell变量的种类}
+				 \subparagraph{环境变量}
+				 	shell进程的环境变量可以从当前shell进程传给fork出来的子进程.
+				 	
+				 	每次当一个shell启动时, 它都将创建适合于自己环境变量的shell变量. 更新或者添加一个新的环境变量的话, 这个shell都会立刻更新它自己的环境(换句话说, \textbf{在当前进程如果更改或增加的变量会立即生效}), 并且所有的shell子进程(即这个shell所执行的命令)都会继承这个环境. (\textbf{准确地说,应该是后继生成的子进程才会继承Shell的新环境变量, 已经运行的子进程并不会得到它的新环境变量}).
+				 	
+				 	\textbf{一个脚本只能够export变量到这个脚本所产生的子进程, 也就是说只能够对这个脚本所产生的命令和进程起作用}. 如果脚本是从命令行中调用的, 那么这个脚本所export的变量是不能影响命令行环境的. 也就是说, 子进程是不能够export变量来影响产生自己的父进程的环境的
+				 	
+				 \subparagraph{本地变量}只存在于当前shell进程
 				 
 				 利用printenv可以显示当前shell进程的环境变量；利用set命令可以显示当前shell进程中的定义的所有变量（包括环境变量和本地变量）和函数。
 				 
@@ -411,18 +414,6 @@ ls
 	unset COUNT
 					 \end{lstlisting}
 				
-				\subparagraph{变量引用：}引用shell变量要用到\$符号，加\verb|{}|可以防止歧义。
-					\begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
-	COUNT=5
-	echo $COUNT
-	echo ${COUNT}911
-					\end{lstlisting}
-				
-					\begin{figure}[h]
-						\centering
-						\includegraphics[scale = 0.7]{figure/ShellRefVariable.png}
-						\caption{Shell Variable Use}
-					\end{figure}
 				\subparagraph{只读变量}
 					使用 readonly 命令可以将变量定义为只读变量，只读变量的值不能被改变。
 					
@@ -436,35 +427,24 @@ ls
 	//运行脚本，结果如下：
 	/bin/sh: NAME: This variable is read only.
 					\end{lstlisting}
+
+			\subparagraph{Shell 字符串}
+				字符串是shell编程中最常用最有用的数据类型（除了数字和字符串，也没啥其它类型好用了），字符串可以用单引号，也可以用双引号，也可以不用引号。
+				\begin{itemize}
+					\item \textbf{单引号字符串的限制:}
+						\begin{enumerate}
+							\item 单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的；
+							\item 单引号字串中不能出现单引号（对单引号使用转义符后也不行）。
+						\end{enumerate}
 					
-				\subparagraph{删除变量}
-					使用 unset 命令可以删除变量。语法：unset variable\_name,变量被删除后不能再次使用。unset 命令不能删除只读变量。
-					\begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
-	#!/bin/sh
-	myUrl="http://www.runoob.com"
-	unset myUrl
-	echo $myUrl
-	
-	// 以上没输出
-					\end{lstlisting}
-					
-				\subparagraph{Shell 字符串}
-					字符串是shell编程中最常用最有用的数据类型（除了数字和字符串，也没啥其它类型好用了），字符串可以用单引号，也可以用双引号，也可以不用引号。
-					\begin{itemize}
-						\item \textbf{单引号字符串的限制:}
-							\begin{enumerate}
-								\item 单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的；
-								\item 单引号字串中不能出现单引号（对单引号使用转义符后也不行）。
-							\end{enumerate}
-						
-						\item \textbf{双引号字符串的好处:}
-							\begin{enumerate}
-								\item \textbf{双引号里可以有变量}
-								\item \textbf{双引号里可以出现转义字符}
-							\end{enumerate}
-					\end{itemize}
-					
-					\begin{lstlisting}[xleftmargin=.06\textwidth]
+					\item \textbf{双引号字符串的好处:}
+						\begin{enumerate}
+							\item \textbf{双引号里可以有变量}
+							\item \textbf{双引号里可以出现转义字符}
+						\end{enumerate}
+				\end{itemize}
+				
+				\begin{lstlisting}[xleftmargin=.06\textwidth]
 	str='this is a string'
 	your_name='qinjx'
 	str="Hello, I know your are \"$your_name\"! \n"
@@ -525,6 +505,45 @@ ls
 	# 取得数组单个元素的长度
 	lengthn=${#array_name[n]}
 					\end{lstlisting}
+							
+		\subsection{变量操作}
+			\subparagraph{变量赋值}
+				\begin{itemize}[itemindent = 1em]
+					\item 使用 \verb|=|, 等号前后不要出现空格
+					\item 在 read 命令
+					\item 在 循环头 \verb|for var in 1 2 3|
+				\end{itemize}
+					
+			\subparagraph{变量引用}引用shell变量要用到\$符号，加\verb|{}|可以防止歧义。
+			
+				还有一种是可以在双引号的字符串中解释命令,形式如\verb|$(command)|。
+				
+				以\verb|$|开头的相关操作。
+				\begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
+	COUNT=5
+	echo $COUNT
+	echo ${COUNT}911
+	echo "$(ls -a)"
+				\end{lstlisting}
+			
+				\begin{figure}[h]
+					\centering
+					\includegraphics[scale = 0.7]{figure/ShellRefVariable.png}
+					\caption{Shell Variable Use}
+				\end{figure}
+									
+			\subparagraph{删除变量}
+				使用 unset 命令可以删除变量。语法：unset variable\_name,变量被删除后不能再次使用。unset 命令不能删除只读变量。
+				\begin{lstlisting}[frame=L,xleftmargin=.06\textwidth]
+	#!/bin/sh
+	myUrl="http://www.runoob.com"
+	unset myUrl
+	echo $myUrl
+	
+	// 以上没输出
+					\end{lstlisting}
+					
+
 				\subparagraph{Shell 注释}
 					以\verb|#|开头的行为注释行
 				
@@ -539,6 +558,7 @@ ls
 			 	\item  \verb|$#|：参数个数
 			 	\item  \verb|$$|：当前shell的PID进程ID
 			 	\item  \verb|$@和$*|均表示所有参数，形式有所不同。\verb|$@："$1" "$2" … "$n"|； \verb|$*: "$1 $2 … $n"|。
+			 	\item  \verb|$?|：保存函数中\textbf{最后所执行命令}的退出状态码。
 			 \end{itemize}
 			 
 			 \begin{lstlisting}[xleftmargin=.06\textwidth]
@@ -698,8 +718,9 @@ ls
 			 
 			 Bash 在线运行网址：\url{http://www.runoob.com/try/runcode.php?filename=helloworld&type=bash}
 
-\chapter{Shell 运算操作}
-		 \section{算数运算}
+\chapter{Shell 运算、逻辑}
+	
+	\section{算数运算}
 			 \begin{lstlisting}[xleftmargin=.06\textwidth]
 	#!/bin/bash
 	
@@ -712,7 +733,7 @@ ls
 	val=`expr $a - $b`
 	echo "a - b : $val"
 	
-	//乘号(*)前边必须加反斜杠(\)才能实现乘法运算
+	#乘号(*)前边必须加反斜杠(\)才能实现乘法运算
 	val=`expr $a \* $b`
 	echo "a * b : $val"
 	
@@ -721,25 +742,25 @@ ls
 	
 	val=`expr $b % $a`
 	echo "b % a : $val"
-	
-	if [ $a == $b ]
-	then
-		echo "a 等于 b"
-	fi
-	if [ $a != $b ]
-	then
-		echo "a 不等于 b"
-	fi
-	
-	//////////////// Result -->///////////////////////
-	a + b : 30
-	a - b : -10
-	a * b : 200
-	b / a : 2
-	b % a : 0
-	a 不等于 b
 			 \end{lstlisting}
-		 \section{关系运算}
+		 \section{数字关系运算}
+			\begin{table}[H]
+				\centering
+				\caption{数字 测试条件}
+				\begin{tabular}{p{5cm}<{\centering} | p{10cm}<{\centering}}
+					\toprule
+						条件测试类型 & 含义说明\\
+					\midrule
+						\verb|[ $var1 -eq $var2 ]| & 参数1 等于 参数2？\\
+						\verb|[ $var1 -ne $var2 ]| & 参数1 不等于 参数2？\\
+						\verb|[ $var1 -lt $var2 ]| & 参数1 小于 参数2？\\
+						\verb|[ $var1 -le $var2 ]| & 参数1 小于等于 参数2？\\
+						\verb|[ $var1 -gt $var2 ]| & 参数1 大于 参数2？\\
+						\verb|[ $var1 -ge $var2 ]| & 参数1 大于等于 参数2？\\
+					\bottomrule
+				\end{tabular}
+			\end{table}
+					 
 			 \begin{lstlisting}[xleftmargin=.06\textwidth]
 	#!/bin/bash
 	
@@ -752,47 +773,23 @@ ls
 	else
 		echo "$a -eq $b: a 不等于 b"
 	fi
-	if [ $a -ne $b ]
-	then
-		echo "$a -ne $b: a 不等于 b"
-	else
-		echo "$a -ne $b : a 等于 b"
-	fi
-	if [ $a -gt $b ]
-	then
-		echo "$a -gt $b: a 大于 b"
-	else
-		echo "$a -gt $b: a 不大于 b"
-	fi
-	if [ $a -lt $b ]
-	then
-		echo "$a -lt $b: a 小于 b"
-	else
-		echo "$a -lt $b: a 不小于 b"
-	fi
-	if [ $a -ge $b ]
-	then
-		echo "$a -ge $b: a 大于或等于 b"
-	else
-		echo "$a -ge $b: a 小于 b"
-	fi
-	if [ $a -le $b ]
-	then
-		echo "$a -le $b: a 小于或等于 b"
-	else
-		echo "$a -le $b: a 大于 b"
-	fi
-	
-	/////////////////////////Result ->////////////////////////////////
-	10 -eq 20: a 不等于 b
-	10 -ne 20: a 不等于 b
-	10 -gt 20: a 不大于 b
-	10 -lt 20: a 小于 b
-	10 -ge 20: a 小于 b
-	10 -le 20: a 小于或等于 b
 				 \end{lstlisting}
 		 
 		 \section{布尔运算}
+			\begin{table}[H]
+				\centering
+				\caption{布尔 测试条件}
+				\begin{tabular}{p{5cm}<{\centering} | p{10cm}<{\centering}}
+					\toprule
+						条件测试类型 & 含义说明\\
+					\midrule
+						\verb|[ $var1 != $var2 ]| & 参数1 不等于 参数2？\\
+						\verb|[ bool1 -a bool2 ]| & 条件1 并且  条件2 \\
+						\verb|[ bool1 -o bool2 ]| & 条件1 或  条件2\\
+					\bottomrule
+				\end{tabular}
+			\end{table}		 
+		 
 			 \begin{lstlisting}[xleftmargin=.06\textwidth]
 	#!/bin/bash
 
@@ -811,23 +808,6 @@ ls
 	else
 		echo "$a -lt 100 -a $b -gt 15 : 返回 false"
 	fi
-	if [ $a -lt 100 -o $b -gt 100 ]
-	then
-		echo "$a -lt 100 -o $b -gt 100 : 返回 true"
-	else
-		echo "$a -lt 100 -o $b -gt 100 : 返回 false"
-	fi
-	if [ $a -lt 5 -o $b -gt 100 ]
-	then
-		echo "$a -lt 100 -o $b -gt 100 : 返回 true"
-	else
-		echo "$a -lt 100 -o $b -gt 100 : 返回 false"
-	fi
-	/////////////////////Result ->//////////////////////////////////
-	10 != 20 : a 不等于 b
-	10 -lt 100 -a 20 -gt 15 : 返回 true
-	10 -lt 100 -o 20 -gt 100 : 返回 true
-	10 -lt 100 -o 20 -gt 100 : 返回 false
 			 \end{lstlisting}
 		 \section{逻辑运算}
 			 \begin{lstlisting}[xleftmargin=.06\textwidth]
@@ -855,6 +835,22 @@ ls
 	返回 true
 			 \end{lstlisting}
 		 \section{字符串运算}
+		 	
+			\begin{table}[H]
+				\centering
+				\caption{字符串 测试条件}
+				\begin{tabular}{p{5cm}<{\centering} | p{10cm}<{\centering}}
+					\toprule
+						条件测试类型 & 含义说明\\
+					\midrule
+						\verb|[ -z $stringVar ]| &  字符串变量长度为0？ \\
+						\verb|[ -n $stringVar ]| &  字符串变量长度不为0？\\
+						\verb|[ $stringVar ]| &  字符串变量长度不为0？\\
+						\verb|[ $string1 == $string2 ]| & 字符串相等？  \\	
+						\verb|[ $string1 > $string2 ]| & 字符串1大于字符串2？  \\
+					\bottomrule
+				\end{tabular}
+			\end{table}
 			 \begin{lstlisting}[xleftmargin=.06\textwidth]
 	#!/bin/bash
 	a="abc"
@@ -866,38 +862,34 @@ ls
 	else
 		echo "$a = $b: a 不等于 b"
 	fi
-	if [ $a != $b ]
-	then
-		echo "$a != $b : a 不等于 b"
-	else
-		echo "$a != $b: a 等于 b"
-	fi
 	if [ -z $a ]
 	then
 		echo "-z $a : 字符串长度为 0"
 	else
 		echo "-z $a : 字符串长度不为 0"
 	fi
-	if [ -n $a ]
-	then
-		echo "-n $a : 字符串长度不为 0"
-	else
-		echo "-n $a : 字符串长度为 0"
-	fi
-	if [ $a ]
-	then
-		echo "$a : 字符串不为空"
-	else
-		echo "$a : 字符串为空"
-	fi
-	////////////////////////////Result-->//////////////////////////
-	abc = efg: a 不等于 b
-	abc != efg : a 不等于 b
-	-z abc : 字符串长度不为 0
-	-n abc : 字符串长度不为 0
-	abc : 字符串不为空
 			 \end{lstlisting}
+			 
 		\section{文件测试运算}
+			\begin{table}[H]
+				\centering
+				\caption{文件 测试条件}
+				\begin{tabular}{p{5cm}<{\centering} | p{10cm}<{\centering}}
+					\toprule
+						条件测试类型 & 含义说明\\
+					\midrule
+						\verb|[ -a、e $fileVar ]| &  文件存在？存在为真\\
+						\verb|[ -d、c、b、f $fileVar ]| &  文件是目录？字节文件？块文件？普通文件？\\
+						\verb|[ -r、w、x $fileVar ]| &  文件可读、写、执行？\\
+						\verb|[ -s $fileVar ]| &  文件存在且大小不为0？\\
+						\verb|[ -t $fd ]| &  文件描述符打开且指向一个终端？\\
+						\verb|[ -L $fileVar ]| &  文件是一个符号链接？\\
+						\verb|[ -S $fileVar ]| &  文件是一个套接字？\\
+						\verb|[ $file1 -ef $file2 ]| &  如果两个文件指向相同的设备和节点号则为真？\\
+					\bottomrule
+				\end{tabular}
+			\end{table}
+		
 			\begin{lstlisting}
 	#!/bin/bash
 
@@ -908,52 +900,6 @@ ls
 	else
 		echo "文件不可读"
 	fi
-	if [ -w $file ]
-	then
-		echo "文件可写"
-	else
-		echo "文件不可写"
-	fi
-	if [ -x $file ]
-	then
-		echo "文件可执行"
-	else
-		echo "文件不可执行"
-	fi
-	if [ -f $file ]
-	then
-		echo "文件为普通文件"
-	else
-		echo "文件为特殊文件"
-	fi
-	if [ -d $file ]
-	then
-		echo "文件是个目录"
-	else
-		echo "文件不是个目录"
-	fi
-	if [ -s $file ]
-	then
-		echo "文件不为空"
-	else
-		echo "文件为空"
-	fi
-	if [ -e $file ]
-	then
-		echo "文件存在"
-	else
-		echo "文件不存在"
-	fi
-	
-	
-	/////////////////////Result ////////////////////////////////
-	文件可读
-	文件可写
-	文件可执行
-	文件为普通文件
-	文件不是个目录
-	文件不为空
-	文件存在
 			\end{lstlisting} 
 			 
 	 

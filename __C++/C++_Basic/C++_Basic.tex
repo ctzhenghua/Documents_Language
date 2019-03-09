@@ -3360,6 +3360,14 @@ for(;  nMyCounter<100;nMyCounter++)
 					\item Additional Dependecies 添加如下库：见参考文献
 				\end{itemize}
 			
+			\subsubsection{附加依赖项和附加库目录}
+				\subparagraph{添加到附加依赖项} 你的LIB文件被真正包含进来了，类似与在调用的地方加入了
+					\begin{lstlisting}
+	#pragma comment(lib,"a.lib")
+					\end{lstlisting}
+				
+				\subparagraph{添加到附加库目录}：仅仅包含目录只是告诉IDE，搜索没有指定路径的库文件时，也\textbf{搜索这里}。
+			
 			\subsubsection{编程测试}注意：路径中的单杠要换成双杠\verb|\\|
 			
 		\subsection{dll 与 lib 的配置}
