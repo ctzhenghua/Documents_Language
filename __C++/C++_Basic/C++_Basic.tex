@@ -1,58 +1,92 @@
-\documentclass[UTF8,a4paper,12pt]{ctexbook} %ctex-  ctexart
- \usepackage{graphicx}%学习插入图
- \usepackage{verbatim}%学习注释多行
- \usepackage{booktabs}%表格
- \usepackage{geometry}%图片
- \usepackage{amsmath} 
- \usepackage{amssymb}
- \usepackage{listings}%代码
- \usepackage{color}
- \usepackage{float}
- \usepackage{xcolor}
- \usepackage{enumitem}%列表格式
- \usepackage{hyperref}
- \usepackage{url}
- 
- 
- \graphicspath{{figure/}}
- \CTEXsetup[format+={\flushleft}]{section}
- 
-  %代码效果定义
-  \definecolor{mygreen}{rgb}{0,0.6,0}
-  \definecolor{mygray}{rgb}{0.5,0.5,0.5}
-  \definecolor{mymauve}{rgb}{0.58,0,0.82}
-  \lstset{ %
-  	backgroundcolor=\color{white},   % choose the background color
-  	basicstyle=\footnotesize\ttfamily,        % size of fonts used for the code
-  	columns=fullflexible,
-  	breaklines=true,                 % automatic line breaking only at whitespace
-  	captionpos=b,                    % sets the caption-position to bottom
-  	tabsize=4,
-  	commentstyle=\color{mygreen},    % comment style
-  	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
-  	keywordstyle=\color{blue},       % keyword style
-  	stringstyle=\color{mymauve}\ttfamily,     % string literal style
-  	frame=single,					%tb top and bottom; L left double line
-  	xleftmargin=.06\textwidth, 
-  	%xrightmargin=.1\textwidth,
-  	rulesepcolor=\color{red!20!green!20!blue!20},
-  	% identifierstyle=\color{red},
-  	language=c++,
-  }
-%设置目录显示级别
-\setcounter{tocdepth}{4}
-\geometry{left=1.6cm,right=1.8cm,top=2cm,bottom=1.7cm} %设置文章宽度
-%设置页面布局
+\documentclass[UTF8,a4paper,12pt]{ctexbook} 
+
+\usepackage{graphicx}%学习插入图
+\usepackage{verbatim}%学习注释多行
+\usepackage{booktabs}%表格
+\usepackage{geometry}%图片
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}%代码
+\usepackage{xcolor}  %颜色
+\usepackage{enumitem}%列表格式
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setdescription{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\usepackage{tcolorbox}
+\usepackage{algorithm,algpseudocode}  %format of the algorithm
+\usepackage{multirow}   %multirow for format of table
+\usepackage{tabularx} 	%表格排版格式控制
+\usepackage{array}	%表格排版格式控制
+\usepackage{hyperref} %超链接 \url{URL}
+\usepackage{tikz}
+\usepackage{dirtree}
+
+
+\graphicspath{{figure/}}
+\CTEXsetup[format+={\flushleft}]{section}
+%%%% 段落首行缩进两个字 %%%%
+\makeatletter
+\let\@afterindentfalse\@afterindenttrue
+\@afterindenttrue
+\makeatother
+\setlength{\parindent}{2em}  %中文缩进两个汉字位
+
+%%%% 下面的命令重定义页面边距，使其符合中文刊物习惯 %%%%
+\addtolength{\topmargin}{-54pt}
+\setlength{\oddsidemargin}{0.63cm}  % 3.17cm - 1 inch
+\setlength{\evensidemargin}{\oddsidemargin}
+\setlength{\textwidth}{14.66cm}
+\setlength{\textheight}{24.00cm}    % 24.62
+
+%%%% 下面的命令设置行间距与段落间距 %%%%
 \linespread{1.0}
-\pagestyle{plain}
-\author{\kaishu 郑华}
-\title{\textbf{C++\_Basic 总结}}
+\setlength{\parskip}{0.5\baselineskip}
+\geometry{left=1.6cm,right=1.8cm,top=2cm,bottom=1.7cm} %设置文章宽度
+\pagestyle{plain} 		  %设置页面布局
+
+%代码效果定义
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+	backgroundcolor=\color{white},   % choose the background color
+	basicstyle=\footnotesize\ttfamily,      % size of fonts used for the code
+	%stringstyle=\color{codepurple},
+	%basicstyle=\footnotesize,
+	%breakatwhitespace=false,         
+	%breaklines=true,                 
+	%captionpos=b,                    
+	%keepspaces=true,                 
+	%numbers=left,                    
+	%numbersep=5pt,                  
+	%showspaces=false,                
+	%showstringspaces=false,
+	%showtabs=false,        
+	columns=fixed,				 %坚决不添加空格使用fullflexible作为参数,如果想要添加空格使用fixed作为参数,不随便添加空格,只在已经有空格的地方添加空格用flexible
+	breaklines=true,                 % automatic line breaking only at whitespace
+	captionpos=b,                    % sets the caption-position to bottom
+	tabsize=4,
+	commentstyle=\color{mygreen},    % comment style
+	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+	keywordstyle=\color{blue},       % keyword style
+	stringstyle=\color{mymauve}\ttfamily,     % string literal style
+	framexleftmargin=5mm, 
+	frame=shadowbox, 
+	rulesepcolor=\color{blue},
+	xleftmargin = .057\textwidth,
+	rulesepcolor=\color{red!20!green!20!blue!20},
+	escapeinside=``,
+	% identifierstyle=\color{red},
+	language=c++,
+}
+
+	\author{\kaishu 郑华}
+	\title{\textbf{C++\_Basic 总结}}
 
  %正文排版开始
 \begin{document} 
 	
 	\maketitle
-	\tableofcontents 
 		
 \chapter{C++11 新特性必学}
 	\section{右值操作}
@@ -1623,22 +1657,116 @@ inline FuncX(...){}
 		       
 		       \item   浅拷贝即编译器提供的，只会拷贝值，\textbf{如果是数组的话，则是该数组的引用}，而不重新分配空间。  
 		 \end{enumerate}   
-		       \subparagraph{浅拷贝与深拷贝}:
-		       
-		       1- 浅拷贝：两个对象之间成员变量简单的赋值。
-		       
-		       \begin{figure}[H]
-		       	   \centering
-		       	   \includegraphics[width=8cm,clip]{weakCopy.png}
-		       \end{figure}
-		       
-		       2- 深拷贝：不同的对象指针成员指向不同的内存地址，拷贝构造的时候不是简单的指针赋值，而是将内存拷贝过来。
-		       
-		       \subparagraph{拷贝构造函数可能的错误}
-				     带实习的时候发现，一个同学写了一个类，没有写拷贝构造函数，然后在定义函数传参数时，用到该类型本身，结果就导致析构错误。 1种错误可能是因为该类型本身用了数组(默认拷贝构造函数数组是传引用的)，导致释放重释放错误..非法操作地址
-				     
-				     2可能是 函数中(碰到\verb|return|;)的临时变量需要调用析构函数，而参数到函数结束时也会调用析构函数。
-		       
+	     \subparagraph{浅拷贝与深拷贝}:
+	     
+	     1- 浅拷贝：两个对象之间成员变量简单的赋值。
+	     
+	     \begin{figure}[H]
+	     	   \centering
+	     	   \includegraphics[width=8cm,clip]{weakCopy.png}
+	     \end{figure}
+	     
+	     2- 深拷贝：不同的对象指针成员指向不同的内存地址，拷贝构造的时候不是简单的指针赋值，而是将内存拷贝过来。
+	     
+	     \subparagraph{拷贝构造函数可能的错误}
+	     带实习的时候发现，一个同学写了一个类，没有写拷贝构造函数，然后在定义函数传参数时，用到该类型本身，结果就导致析构错误。 1种错误可能是因为该类型本身用了数组(默认拷贝构造函数数组是传引用的)，导致释放重释放错误..非法操作地址
+	     
+	     2可能是 函数中(碰到\verb|return|;)的临时变量需要调用析构函数，而参数到函数结束时也会调用析构函数。
+		   
+	\subsection{拷贝构造的时机}
+		\begin{lstlisting}
+	#include<iostream>
+	using namespace std;
+	class Copy_construction {
+	public:
+	    Copy_construction(int a = 0)
+	    {
+	        this->a = a;
+	        cout << "这是有默认参数的构造函数!\n";
+	    }
+	    Copy_construction(const Copy_construction &obj)
+	    {
+	        cout << "这是拷贝构造函数！\n";
+	        a = obj.a;
+	    }
+	    ~Copy_construction()
+	    {
+	        cout << "一个对象被析构了！\n";
+	    }
+	private:
+	    int a;
+	};
+	void fuc(Copy_construction t)
+	{
+	    cout << "fuc函数！\n";
+	}
+	void play_empty(void)
+	{
+	    Copy_construction t1;//调用有默认实参的构造函数
+	    Copy_construction t2 = t1;//调用拷贝构造函数
+	    Copy_construction t3(t2);//调用拷贝构造函数
+	    cout << "_________________\n";
+	    fuc(t3);//实参初始化形参，调用拷贝构造函数
+	}
+	
+	/*****引用或者指针类型调用时不会调用拷贝构造函数****/
+	void fuc(Copy_construction *t)
+	{
+	    cout << "fuc函数！\n";
+	}
+	
+	void fuc(Copy_construction &t)
+	{
+	    cout << "fuc函数！\n";
+	}
+	
+	// 匿名函数不转正，则直接析构
+	Copy_construction fuc(void)
+	{
+	    cout << "fuc函数！\n";
+	    Copy_construction A;
+	    return A;//调用拷贝构造函数，生成匿名对象
+	}//运行到该处，先析构对象A，匿名对象是否析构要看怎么去接
+	//如下所示直接调用fuc（）则此时匿名对象会被立即析构
+	void play_empty(void)
+	{
+	    fuc();
+	}
+	
+	// 如果匿名函数有承接的，则转正
+	Copy_construction fuc(void)
+	{
+	    cout << "fuc函数！\n";
+	    Copy_construction A;
+	    return A;//调用拷贝构造函数，产生匿名对象
+	}//析构对象A，根据下面代码的接匿名对象的方式，
+	//此时匿名对象不仅不会马上析构，还会转正成为对象B
+	//从c++设计哲学上来说，这也是提高效率的一种方式，这样的设计是合理的,因为你想创建对象B，我就不用再新开辟内存了，直接用之前的匿名对象代替
+	void play_empty(void)
+	{
+	    Copy_construction B=fuc();//这里不会调用拷贝构造函数，匿名对象直接转正了
+	    cout << "匿名对象转正!\n";
+	}
+	
+	void play_empty(void)
+	{
+	    Copy_construction B;
+	    B= fuc();
+	    cout << "匿名对象不会转正!\n";
+	}
+	//如上所示代码，此时对象B会开辟内存，在用返回的匿名对象赋值给B，将会在赋值完成之后立即析构匿名对象，这个时候匿名对象不会转正。
+	
+	int main()
+	{
+	    play_empty();
+	
+	    cout << "hello world!\n";
+	    return 0;
+	}
+		\end{lstlisting}
+	
+	 
+		      
 \section{初始化列表}
 	       
 		       初始化列表仅在构造函数中有效，不能用于其他函数。构造函数的初始化列表可以初始化任何数据成员，但\verb|const|类型数据成员不能 用其他办法进行初始化
@@ -2289,6 +2417,14 @@ inline FuncX(...){}
 		
 		\url{http://www.cnblogs.com/jerry19880126/p/3616999.html}
 		
+		\subsection{类成员为空的内存分布}
+			\begin{lstlisting}
+	class A{};
+	
+	A* a = new A();
+			\end{lstlisting}
+		
+			此时的a 占用多少空间，0？ 错，是1，为什么呢，是因为需要\textbf{提供一个地址}给\textbf{对象}。
 		\subsection{虚函数在内存中分布}
 			对于有虚函数的基类和子类来说，内存中类对象的开始位置就是4字节的\verb|VPTR|（虚函数表的地址，指向\verb|VTABLE|）。
 			
@@ -3325,6 +3461,104 @@ for(;  nMyCounter<100;nMyCounter++)
 	参考C++\_STL 中的泛型编程一章。
 	
 \chapter{异常}
+	
+\chapter{调用约定}
+	\url{https://blog.csdn.net/luoweifu/article/details/52425733}
+	
+	\verb|__cdecl、__stdcall、__fastcall|
+	
+	\section{调用约定概述}
+		函数的调用约定，顾名思义就是对函数调用的一个约束和规定(规范)，描述了函数参数是怎么传递和由谁清除堆栈的。它决定以下内容：
+		\begin{enumerate}
+			\item 函数参数的压栈顺序
+			\item 由调用者还是被调用者把参数弹出栈
+			\item 产生函数修饰名的方法
+		\end{enumerate}
+	
+		我们知道函数由以下几部分构成:返回值类型 函数名(参数列表)，如: 
+		\begin{lstlisting}
+	void function();
+		\end{lstlisting}
+		以上是大家所熟知的构成部分，其实函数的构成还有一部分，那就是调用约定。如下：
+		\begin{lstlisting}
+	void __cdecl function();
+	int __stdcall add(int a, int b);
+		\end{lstlisting}
+		
+		上面的\verb|__cdecl|和\verb|__stdcall|就是调用约定，其中\verb|__cdecl|是\textbf{C和C++默认的调用约定}.
+		
+	\section{声明、定义-约定必须相同}	
+		在VC++中，\textbf{调用约定是函数类型的一部分}，因此\textbf{函数的声明和定义处调用约定要相同，不能只在声明处有调用约定，而定义处没有或与声明不同}。
+		
+		\begin{lstlisting}
+	int __cdecl add(int a, int b);	// 默认其实就是这种形式
+	int __stdcall  add(int a, int b)
+	{
+	    return a + b;
+	}
+	
+	//error C2373: ‘add’: redefinition; different type modifiers 
+	//error C2440: ‘initializing’: cannot convert from ‘int (__cdecl *)(int,int)’ to ‘int’
+		\end{lstlisting}
+	
+	
+	\section{函数调用顺序}
+		\url{https://blog.csdn.net/zsy2020314/article/details/9429707}
+		
+		要深入理解函数调用约定，你须要了解函数的调用过程和调用细节。
+		
+		假设函数A调用函数B，我们称A函数为”调用者”,B函数为“被调用者”。如下面的代码，\verb|ShowResult()|为调用者，\verb|add()|为被调用者。
+		\begin{lstlisting}
+	int add(int a, int b)
+	{
+	    return a + b;
+	}
+	
+	void ShowResult()
+	{
+	    std::cout << add(5, 10) << std::endl;
+	}
+		\end{lstlisting}
+		
+		函数调用过程可以这么描述： 
+		\begin{enumerate}
+			\item 先将调用者（A）的堆栈的基址（ebp）入栈，以保存之前任务的信息。 
+			\item 然后将调用者（A）的栈顶指针（esp）的值赋给ebp，作为新的基址（即被调用者B的栈底）。
+			\item 然后在这个基址（被调用者B的栈底）上开辟（一般用sub指令）相应的空间用作被调用者B的栈空间。
+			\item 函数B返回后，从当前栈帧的ebp即恢复为调用者A的栈顶（esp），使栈顶恢复函数B被调用前的位置；然后调用者A再从恢复后的栈顶可弹出之前的ebp值（可以这么做是因为这个值在函数调用前一步被压入堆栈）。这样，ebp和esp就都恢复了调用函数B前的位置，也就是栈恢复函数B调用前的状态。
+		\end{enumerate}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{functionRef}
+			\caption{函数调用过程示例}
+		\end{figure}
+		
+	\section{cdecl}
+		参考 c++Interview c++部分题目
+	\section{stdcall}
+	
+	\section{fastcall}
+	
+	\section{总结}
+		\begin{table}[H]
+			\centering
+			\caption{cdecl、stadcall、fastcall 总结}
+			\begin{tabular}{p{2cm}<{\centering} | p{4cm}<{\centering} |p{5cm}<{\centering}|p{5cm}<{\centering}}
+				\toprule
+					影响方式 &  \verb|__cdecl| & \verb|__stdcall| & \verb|__fastcall|\\
+				\midrule
+					参数传递方式	&右->左	&右->左&左边开始的两个不大于4字节（DWORD）的参数分别放在ECX和EDX寄存器，其余的参数自右向左压栈传送\\
+				\hline
+					清理栈方	&调用者清理&被调用函数清理	&	被调用函数清理	\\
+				\hline
+					适用场合	&C/C++、MFC的默认方式; 可变参数的时候使用;	&	Win API	&要求速度快\\
+				\hline
+					C编译修饰约定	&\verb|_functionname|&\verb|_functionname@number|&\verb|@functionname@number|\\							
+				\bottomrule
+			\end{tabular}
+		\end{table}
+	
 	
 		
 \chapter{编译}
