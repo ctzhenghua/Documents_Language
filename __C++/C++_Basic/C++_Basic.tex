@@ -1150,6 +1150,26 @@
 		return i;
 	}	 		
 		 	\end{lstlisting}
+
+\chapter{指针}
+	\url{https://www.cnblogs.com/mq0036/p/3382732.html}
+	
+	\section{指针数组}
+		\verb|int *p1[10];|
+		
+		“\verb|[]|”的优先级比“\verb|*|”要高。\verb|p1| 先与“\verb|[]|”结合，\textbf{构成一个数组的定义}，\verb|数组名为p1|，\verb|int *|修饰的是数组的内容，即\textbf{数组的每个元素}。
+		
+ 		\begin{figure}[H]
+ 			\centering
+ 			\includegraphics[scale=0.5]{ptr}
+ 			\caption{指针数组与数组指针内存分布对比}
+ 		\end{figure}
+ 		
+ 		
+ 	\section{数组指针}
+ 		\verb|int (*p2)[10];|
+ 	
+ 		在这里“\verb|()|”的优先级比“\verb|[]|”高，“\verb|*|”号和\verb|p2| \textbf{构成一个指针的定义}，\verb|指针变量名为p2|，\verb|int| 修饰的是数组的内容，即数组的每个元素。数组在这里并没有名字，是个\verb|匿名数组|。那现在我们清楚p2 是一个指针，它指向一个包含10 个\verb|int| 类型数据的数组，\textbf{即数组指针}。
  		
 \chapter{inline 关键字} 
  
@@ -1657,6 +1677,12 @@ inline FuncX(...){}
 		       
 		       \item   浅拷贝即编译器提供的，只会拷贝值，\textbf{如果是数组的话，则是该数组的引用}，而不重新分配空间。  
 		 \end{enumerate}   
+		 
+		 
+		 之前写拷贝构造函数的时候，\textbf{以为参数为引用，不为值传递，仅仅是为了减少一次内存拷贝}。然而今天看到一篇文章发现自己对拷贝构造的参数理解有误。 \textbf{参数为引用，不为值传递是为了防止拷贝构造函数的无限递归，最终导致栈溢出}。
+		 
+		 \url{https://www.cnblogs.com/zsq1993/p/6110773.html}
+		 
 	     \subparagraph{浅拷贝与深拷贝}:
 	     
 	     1- 浅拷贝：两个对象之间成员变量简单的赋值。
