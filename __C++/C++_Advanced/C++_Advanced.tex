@@ -52,7 +52,7 @@
 	%showspaces=false,                
 	%showstringspaces=false,
 	%showtabs=false,        
-	columns=fullflexible,
+	columns=fixed,
 	breaklines=true,                 % automatic line breaking only at whitespace
 	captionpos=b,                    % sets the caption-position to bottom
 	tabsize=4,
@@ -926,6 +926,30 @@
 			
 			如果肯为你的工程实现一个不错的垃圾回收器，提高内存管理的速度，甚至减少总的内存消耗都是可能的。如果有兴趣的话，可以搜索一下网上已有的关于垃圾回收的论文和实现了的库，\textbf{开拓视野对一个程序员尤为重要}。
 	
+	
+	\section{内存屏障}
+		\url{https://blog.csdn.net/liumf2005/article/details/8489265}
+		
+		\url{https://blog.csdn.net/u012233832/article/details/79619648}
+		
+		\url{https://blog.csdn.net/world_hello_100/article/details/50131497}
+		
+		\url{https://blog.csdn.net/u010559006/article/details/82595922}
+		
+		\url{https://my.oschina.net/u/269082/blog/873612}
+		
+		\textbf{内存屏障}其实\textit{就是因为编译器优化和CPU对寄存器和cache的使用}，\textit{导致对内存的操作不能够及时的反映出来}，\textbf{比如cpu写入后，读出来的值可能是旧的内容}。
+		
+		举个例子，对一个变量赋值然后读出它的值这一看似“原子”的操作，因为内存是没有ALU计算单元的，所以内存没有计算的能力。而CPU一般情况下是不直接读写内存的(emmintrin.h应用例外)，所以这一个过程可以看作(编译器优化后)：
+		
+		\textbf{读取内存数据到cache} -->  \textbf{CPU读取cache/寄存器}  -->  \textbf{CPU的计算}  -->  \textbf{将结果写入cache/寄存器}  -->  \textbf{写回数据到内存}
+		
+		有人可能会问，为什么要这么麻烦，因为是编译器优化和CPU优化的结果，内存的时延比CPU高的多，是10ns级别，所以会通过读写寄存器或拆cache优化。这有可能导致一个问题，cache中的数据和内存实际的数据不一致，当多线程情况下，有可能会读"脏数据"，或者带来线程执行结果不一致。这就是所谓的“内存屏障”(但不仅限于此case)。
+		
+		\textbf{大部分内存屏障导致的问题都出现在内核态}，用户态需要注意的方面不多。而且用户也有相应的解决方案，\textbf{最简单的就是锁机制，还有volatile关键字}，可以把可能出现的cache读脏的数据\verb|volatile int tmp = 0;|\textbf{这样每次操作都会从内存获取}。
+		
+		\textbf{其核心旨意}其实就是\textbf{防止编译器对其进行优化}(可以预防上文中提到的编译器导致的内存屏障)，\textbf{也就是每次cpu要获取一个变量，都要去内存中重新读取，而不是从寄存器Cache中}。
+		
 \chapter{装载链接原理}
 	参考文献：\url{https://tech.meituan.com/linker.html}
 	
@@ -1086,9 +1110,9 @@
 			
 			\verb|gcc test3.c -o test3; nm test3|
 			\begin{lstlisting}
-	00000000004005b4 T main
-						U printf@@GLIBC_2.2.5
-						U strncpy@@GLIBC_2.2.5		
+00000000004005b4 T main
+				 U printf@@GLIBC_2.2.5
+				 U strncpy@@GLIBC_2.2.5		
 			\end{lstlisting}
 			
 			现在我们检查的是可执行文件，为什么可执行文件里面仍然有这种没有地址的 symbols 呢？
@@ -1154,13 +1178,13 @@
 			\end{figure}
 			
 			\begin{itemize}[itemindent = 1em]
-				\item 首先 bash 进行 \verb|fork |系统调用，生成一个子进程，接着在子进程中运行 \verb|execve| 函数指定的 \verb|elf 二进制程序|（ Linux中执行二进制程序最终都是通过 \verb|execve| 这个库函数进行的），\verb|execve| 会调用系统调用把 \verb|elf 文件| load 到内存中的代码段(\verb|_text|)中。
+				\item 首先 bash 进行 \verb|fork |系统调用，生成一个子进程，接着在子进程中运行 \verb|execve| 函数指定的 \verb|elf 二进制程序|（ Linux中执行二进制程序最终都是通过 \verb|execve| 这个库函数进行的），\verb|execve| \textbf{会调用系统调用把} \verb|elf 文件| \textbf{load 到内存中的代码段}(\verb|_text|)中。
 				
-				\item 如果有依赖的动态链接库，会调用动态链接器进行库文件的地址映射，动态链接库的内存空间是被多个进程共享的。
+				\item 如果有依赖的动态链接库，\textbf{会调用动态链接器进行库文件的地址映射}，动态链接库的内存空间是被多个进程共享的。
 				
-				\item 内核从 \verb|elf| 文件头得到\verb|_start|的地址，调度执行流从\verb|_start|指向的地址开始执行，执行流在\verb|_start|执行的代码段中跳转到\verb|libc|中的公共初始化代码段\verb|__libc_start_main|，进行程序运行前的初始化工作。
+				\item 内核从 \verb|elf| 文件头得到\verb|_start|的地址，调度执行流从\verb|_start|指向的地址开始执行，执行流在\verb|_start|执行的代码段中跳转到\verb|libc|中的公共初始化代码段\verb|__libc_start_main|，\textbf{进行程序运行前的初始化工作}。
 				
-				\item \verb|__libc_start_main|的执行过程中，会跳转到\verb|_init|中全局变量的初始化工作，随后调用我们的\verb|main|函数，进入到主函数的指令流程。
+				\item \verb|__libc_start_main|的执行过程中，会跳转到\verb|_init|中\textbf{全局变量的初始化工作}，\underline{随后}调用我们的\verb|main|函数，\textbf{进入到主函数}的指令流程。
 			\end{itemize}
 
 	
@@ -4354,10 +4378,1129 @@ The countdown lasted for 10 seconds.
 	\end{lstlisting}	
 	
 \section{元编程}
+
+\section{shared\_ptr 实现原理}	
+	\url{https://blog.csdn.net/ithiker/article/details/51532484}
+	\subsection{源码}
+		\begin{lstlisting}
+template<typename _Tp>
+class shared_ptr
+: public __shared_ptr<_Tp>
+{
+	public:
+	shared_ptr()
+	: __shared_ptr<_Tp>() { }
+	
+	template<typename _Tp1>
+	explicit
+	shared_ptr(_Tp1* __p)
+	: __shared_ptr<_Tp>(__p) { }
+	
+	template<typename _Tp1, typename _Deleter>
+	shared_ptr(_Tp1* __p, _Deleter __d)
+	: __shared_ptr<_Tp>(__p, __d) { }
+	
+	template<typename _Tp1>
+	shared_ptr(const shared_ptr<_Tp1>& __r)
+	: __shared_ptr<_Tp>(__r) { }
+	
+	template<typename _Tp1>
+	explicit
+	shared_ptr(const weak_ptr<_Tp1>& __r)
+	: __shared_ptr<_Tp>(__r) { }
+	
+	template<typename _Tp1>
+	shared_ptr(const shared_ptr<_Tp1>& __r, __static_cast_tag)
+	: __shared_ptr<_Tp>(__r, __static_cast_tag()) { }
+	
+	template<typename _Tp1>
+	shared_ptr(const shared_ptr<_Tp1>& __r, __const_cast_tag)
+	: __shared_ptr<_Tp>(__r, __const_cast_tag()) { }
+	
+	template<typename _Tp1>
+	shared_ptr(const shared_ptr<_Tp1>& __r, __dynamic_cast_tag)
+	: __shared_ptr<_Tp>(__r, __dynamic_cast_tag()) { }
+	
+	template<typename _Tp1>
+	shared_ptr&
+	operator=(const shared_ptr<_Tp1>& __r) // never throws
+	{
+		this->__shared_ptr<_Tp>::operator=(__r);
+		return *this;
+	}
+};
+
+// 2.2.3.8 shared_ptr specialized algorithms.
+template<typename _Tp>
+inline void
+swap(__shared_ptr<_Tp>& __a, __shared_ptr<_Tp>& __b)
+{ 
+	__a.swap(__b); 
+}
+
+template<typename _Tp, typename _Tp1>
+inline shared_ptr<_Tp>
+static_pointer_cast(const shared_ptr<_Tp1>& __r)
+{ 
+	return shared_ptr<_Tp>(__r, __static_cast_tag()); 
+}
+
+template<typename _Tp, typename _Tp1>
+inline shared_ptr<_Tp>
+const_pointer_cast(const shared_ptr<_Tp1>& __r)
+{ 
+	return shared_ptr<_Tp>(__r, __const_cast_tag()); 
+}
+
+template<typename _Tp, typename _Tp1>
+inline shared_ptr<_Tp>
+dynamic_pointer_cast(const shared_ptr<_Tp1>& __r)
+{ 
+	return shared_ptr<_Tp>(__r, __dynamic_cast_tag()); 
+}		
+		\end{lstlisting}
+	
+	
+	\subsection{分析}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=17cm,height=10cm]{shared_ptr_count}
+		\caption{weakptr And sharedptr}
+	\end{figure}
+
+	从上面的类图可以清楚的看出\verb|shared_ptr|内部含有一个指向\textbf{被管理对象(managed object)T的}指针以及一个\verb|__shared_count|对象，\verb|__shared_count|对象包含一个指向\textbf{管理对象(manager object)的}基类指针，管理对象(manager object)由具有原子属性的\verb|use_count|和\verb|weak_count|、指向\textbf{被管理对象(managed object)T的}指针、以及用来销毁被管理对象的deleter组成，以下均将用new创建后托管给\verb|shared_ptr|等智能指针管理的对象叫做被管理对象（managed object)；\verb|shared_ptr|等智能指针内部创建的用来维护被管理对象生命周期的实例叫做\textbf{管理对象(manager object)}：
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=8cm,height=6cm]{shared_ptr}
+		\includegraphics[width=8cm,height=6cm]{weak_ptr}
+		\caption{weakptr And sharedptr}
+	\end{figure}	
+	
+	从上图对比可以看出,\verb|shared_ptr|\textbf{与}\verb|weak_ptr|\textbf{的差异主要是由}\verb|__shared_ptr|\textbf{与}\verb|__weak_ptr|\textbf{体现出来的}，而\verb|__shared_ptr|与\verb|__weak_ptr|的差异则\textbf{主要是由}\verb|__shared_count|与\verb|__weak_count|\textbf{体现出来}。
+	
+	\verb|shared_ptr|内部\textbf{包含一个}指向被管理对象的指针\verb|_M_ptr|,\verb| _Sp_counted_base_impl|内部\textbf{也含有一个}指向被管理对象的指针\verb|_M_ptr|， 它们\textbf{是不是重复多余了}呢？
+	
+	实际上不多余，它们有各自的功能。这首先要从\verb|shared_ptr|的拷贝构造或者赋值构造说起，当一个\verb|shared_ptr|对象sp2是由sp1拷贝构造或者赋值构造得来的时候，实际上构造完成后sp1内部的\verb|__shared_count|对象包含的指向管理对象的指针与sp2内部的\verb|__shared_count|对象包含的指向管理对象的指针是相等的，也就是说\textbf{当多个}\verb|shared_ptr|\textbf{对象来管理同一个对象时}，\textbf{它们共同使用同一个动态分配的管理对象}。
+	
+	这可以从下面的\verb|__share_ptr|的构造函数和\verb|__shared_count|的构造函数清楚的看出。
+	
+	\begin{lstlisting}
+template<typename _Tp1>
+ __shared_ptr(const __shared_ptr<_Tp1, _Lp>& __r)
+ : _M_ptr(__r._M_ptr), _M_refcount(__r._M_refcount) // never throws
+{__glibcxx_function_requires(_ConvertibleConcept<_Tp1*, _Tp*>)}
+ 
+ 
+__shared_count&
+operator=(const __shared_count& __r) // nothrow
+{
+    _Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+    if (__tmp != _M_pi)
+    {
+        if (__tmp != 0)
+            __tmp->_M_add_ref_copy();
+	if (_M_pi != 0)
+	    _M_pi->_M_release();
+	
+        _M_pi = __tmp;
+    }
+}	
+	\end{lstlisting}
+	
+	从第一张类图可以看出，\verb|__share_count|是计数的管理对象，其中的\verb|_M_pi|表示实际计数对象的指针。
+	
+	
+	上面说说当多个\verb|shared_ptr|对象来管理同一个对象时，它们共同使用同一个动态分配的管理对象，为什么上面给出的\verb|_shared_count|的构造函数中出现了\verb|__tmp != _M_pi|的情形呢？这在sp2未初始化时（\verb|_M_pi|为0，\verb|_r._M_pi|非0）便是这样的情形。
+	
+	更一般的，也可以考虑这样的情形：\verb|shared_ptr|实例sp1开始指向类\textbf{A的实例对象a1}, 另外一个\verb|shared_ptr|实例sp2指向类\textbf{A的实例对象a2}（a1 != a2)，当把sp2赋值给sp1时便会出现上面的情形。假设初始时有且仅有一个sp1指向a1, 有且仅有一个sp2指向a2; 则赋值结束时sp1与sp2均指向a2, 没有指针指向a1, sp1指向的a1以及其对应的管理对象均应该被析构。这在上面的代码中我们可以很清楚的看到：因为\verb|__tmp != _M_pi|, \verb| __tmp|->\verb|_M_add_ref_copy|()将会增加a2的\verb|use_count|的引用计数；由于a1内部的\verb|_M_pi != 0|, 将会调用其\verb|_M_release()|函数
+	
+	\begin{lstlisting}
+//************_Sp_counted_base*****************//
+void
+_M_add_ref_copy()
+{ 
+	__gnu_cxx::__atomic_add_dispatch(&_M_use_count, 1); 
+}
+ 
+//************_Sp_counted_base*****************//
+void
+_M_release() // nothrow
+{
+	_GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(&_M_use_count);
+	if (__gnu_cxx::__exchange_and_add_dispatch(&_M_use_count, -1) == 1)
+	{
+		_GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(&_M_use_count);
+		_M_dispose();
+		
+		if (_Mutex_base<_Lp>::_S_need_barriers)
+		{
+			__atomic_thread_fence (__ATOMIC_ACQ_REL);
+		}
+		
+		_GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(&_M_weak_count);
+		if (__gnu_cxx::__exchange_and_add_dispatch(&_M_weak_count, -1) == 1)
+		{
+			_GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(&_M_weak_count);
+			_M_destroy();
+		}
+	}
+}
+ 
+//************_Sp_counted_base*****************//
+// Called when _M_use_count drops to zero, to release the resources
+// managed by *this.
+virtual void _M_dispose() = 0; // nothrow
+ 
+// Called when _M_weak_count drops to zero.
+virtual void _M_destroy() // nothrow
+{ 
+	delete this; 
+}
+ 
+//************_Sp_counted_base_impl*************//
+virtual void _M_dispose() // nothrow
+{ 
+	_M_del(_M_ptr); 
+}
+	
+	\end{lstlisting}
+	
+	\verb|_M_release()|函数首先对a1的\verb|use_count|减去1，并对比减操作之前的值，如果减之前是1，说明减后是0，a1没有任何\verb|shared_ptr|指针指向它了，应该将a1对象销毁，于是调用\verb|_M_dispose()|函数销毁a1; 同时对a1的\verb|weak_count|减去1，也对比减操作之前的值，如果减之前是1，说明减后是0，a1没有\verb|weak_ptr|指向它了，应该将管理对象销毁，于是调用\verb|_M_destroy()|销毁了管理对象。这就可以解答为什么图2所示中\verb|shared_ptr|内部含有两个指向被管理对象的指针了：\verb|__shared_ptr|\textbf{直接包含的裸指针是为了实现一般指针的}\verb|->,*|\textbf{等操作}，\textbf{通过}\verb|__shared_count|\textbf{间接包含的指针是为了管理对象的生命周期，回收相关资源}。
+	
+	换句话说，\verb|__shared_count|\textbf{内部的}\verb|use_count|\textbf{主要用来标记被管理对象的生命周期}，\verb|weak_count|\textbf{主要用来标记管理对象的生命周期}。
+	
+	\textit{当一个}\verb|shared_ptr|\textit{超出作用域被销毁时}，它会调用其\verb|_share_count|的\verb|_M_release()|对\verb|use_count|和\verb|weak_count|进行自减\textbf{并判断是否需要释放管理对象和被管理对象}，这是\textbf{RAII原理}的核心体现：
+	
+	\begin{lstlisting}
+~__shared_count() // nothrow
+{
+	if (_M_pi != 0)
+		_M_pi->_M_release();
+}	
+	\end{lstlisting}
+	
+\section{weak\_ptr 实现原理}
+	\url{https://blog.csdn.net/dong_beijing/article/details/79504591}
+	
+	\subsection{使用示例}
+		\begin{itemize}
+			\item \verb|expired()| 用于检测所管理的对象是否已经释放, 如果已经释放, 返回 true; 否则返回 false.
+			\item \verb|lock()| 用于获取所管理的对象的强引用(\verb|shared_ptr|). 如果 expired 为 true, 返回一个空的 \verb|shared_ptr|; 否则返回一个 \verb|shared_ptr|, 其内部对象指向与 \verb|weak_ptr| 相同.
+			\item \verb|use_count()| 返回与 \verb|shared_ptr| 共享的对象的引用计数.
+			\item \verb|reset()| 将 \verb|weak_ptr| 置空.
+			\item \verb|weak_ptr| 支持拷贝或赋值, 但不会影响对应的 \verb|shared_ptr| 内部对象的计数.
+		\end{itemize}
+		
+		\begin{lstlisting}
+std::shared_ptr<int> sp(new int(10));
+std::weak_ptr<int> wp(sp);
+wp = sp;
+printf("%d\n", wp.use_count()); // 1
+wp.reset();
+printf("%d\n", wp); // 0
+
+// 检查 weak_ptr 内部对象的合法性.
+if (std::shared_ptr<int> sp = wp.lock())
+{
+}		
+		\end{lstlisting}
+	
+	\subsection{实现原理}
+		\begin{lstlisting}
+template<typename _Tp, _Lock_policy _Lp>
+class __weak_ptr
+{
+	public:
+	typedef _Tp element_type;
+	
+	__weak_ptr()
+	: _M_ptr(0), _M_refcount() // never throws
+	{ }
+	
+	// Generated copy constructor, assignment, destructor are fine.
+	template<typename _Tp1>
+	__weak_ptr(const __weak_ptr<_Tp1, _Lp>& __r)
+	: _M_refcount(__r._M_refcount) // never throws
+	{
+		__glibcxx_function_requires(_ConvertibleConcept<_Tp1*, _Tp*>)
+		_M_ptr = __r.lock().get();
+	}
+	
+	template<typename _Tp1>
+	__weak_ptr(const __shared_ptr<_Tp1, _Lp>& __r)
+	: _M_ptr(__r._M_ptr), _M_refcount(__r._M_refcount) // never throws
+	{
+		 __glibcxx_function_requires(_ConvertibleConcept<_Tp1*, _Tp*>) 
+	}
+	
+	template<typename _Tp1>
+	__weak_ptr&
+	operator=(const __weak_ptr<_Tp1, _Lp>& __r) // never throws
+	{
+		_M_ptr = __r.lock().get();
+		_M_refcount = __r._M_refcount;
+		return *this;
+	}
+	
+	template<typename _Tp1>
+	__weak_ptr&
+	operator=(const __shared_ptr<_Tp1, _Lp>& __r) // never throws
+	{
+		_M_ptr = __r._M_ptr;
+		_M_refcount = __r._M_refcount;
+		return *this;
+	}
+	
+	__shared_ptr<_Tp, _Lp>
+	lock() const // never throws
+	{
+		#ifdef __GTHREADS
+		// Optimization: avoid throw overhead.
+		if (expired())
+			return __shared_ptr<element_type, _Lp>();
+		
+		__try
+		{
+			return __shared_ptr<element_type, _Lp>(*this);
+		}
+		__catch(const bad_weak_ptr&)
+		{
+			// Q: How can we get here?
+			// A: Another thread may have invalidated r after the
+			//    use_count test above.
+			return __shared_ptr<element_type, _Lp>();
+		}
+		
+		#else
+		// Optimization: avoid try/catch overhead when single threaded.
+		return expired() ? __shared_ptr<element_type, _Lp>()
+		: __shared_ptr<element_type, _Lp>(*this);
+		
+		#endif
+	} // XXX MT
+	
+	long
+	use_count() const // never throws
+	{ 
+		return _M_refcount._M_get_use_count(); 
+	}
+	
+	bool
+	expired() const // never throws
+	{ 
+		return _M_refcount._M_get_use_count() == 0; 
+	}
+	
+	void
+	reset() // never throws
+	{ 
+		__weak_ptr().swap(*this); 
+	}
+	
+	void
+	swap(__weak_ptr& __s) // never throws
+	{
+		std::swap(_M_ptr, __s._M_ptr);
+		_M_refcount._M_swap(__s._M_refcount);
+	}
+	
+	private:
+	// Used by __enable_shared_from_this.
+	void
+	_M_assign(_Tp* __ptr, const __shared_count<_Lp>& __refcount)
+	{
+		_M_ptr = __ptr;
+		_M_refcount = __refcount;
+	}
+	
+	template<typename _Tp1>
+	bool
+	_M_less(const __weak_ptr<_Tp1, _Lp>& __rhs) const
+	{ 
+		return _M_refcount < __rhs._M_refcount; 
+	}
+	
+	template<typename _Tp1, _Lock_policy _Lp1> friend class __shared_ptr;
+	template<typename _Tp1, _Lock_policy _Lp1> friend class __weak_ptr;
+	friend class __enable_shared_from_this<_Tp, _Lp>;
+	friend class enable_shared_from_this<_Tp>;
+	
+	// Friend injected into namespace and found by ADL.
+	template<typename _Tp1>
+	friend inline bool
+	operator<(const __weak_ptr& __lhs, const __weak_ptr<_Tp1, _Lp>& __rhs)
+	{ 
+		return __lhs._M_less(__rhs); 
+	}
+	
+	_Tp*       	 _M_ptr;         // Contained pointer.
+	__weak_count<_Lp>  _M_refcount;    // Reference counter.
+};
+	
+	\end{lstlisting}
+	
+	对于\verb|weak_ptr|, 其对应的\verb|__weak_count|的\textbf{拷贝构造函数}如下
+	\begin{lstlisting}
+//************_Sp_counted_base*****************//
+void
+_M_weak_add_ref() // nothrow
+{ __gnu_cxx::__atomic_add_dispatch(&_M_weak_count, 1); }
+ 
+//************_Sp_counted_base*****************//
+void
+_M_weak_release() // nothrow
+{
+    // Be race-detector-friendly. For more info see bits/c++config.
+    _GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(&_M_weak_count);
+    if (__gnu_cxx::__exchange_and_add_dispatch(&_M_weak_count, -1) == 1)
+    {
+        _GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(&_M_weak_count);
+	if (_Mutex_base<_Lp>::_S_need_barriers)
+	{
+	    // See _M_release(),
+	    // destroy() must observe results of dispose()
+            __atomic_thread_fence (__ATOMIC_ACQ_REL);
+	}
+	_M_destroy();
+    }
+}
+ 
+__weak_count<_Lp>&
+operator=(const __shared_count<_Lp>& __r) // nothrow
+{
+    _Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+    if (__tmp != 0)
+        __tmp->_M_weak_add_ref();
+  
+    if (_M_pi != 0)
+        _M_pi->_M_weak_release();
+  
+    _M_pi = __tmp;  
+	
+    return *this;
+}
+      
+__weak_count<_Lp>&
+operator=(const __weak_count<_Lp>& __r) // nothrow
+{
+    _Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+    if (__tmp != 0)
+        __tmp->_M_weak_add_ref();
+    if (_M_pi != 0)
+        _M_pi->_M_weak_release();
+    _M_pi = __tmp;
+	
+    return *this;
+}
+ 
+__weak_count<_Lp>&
+operator=(const __shared_count<_Lp>& __r) // nothrow
+{
+    _Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+    if (__tmp != 0)
+      __tmp->_M_weak_add_ref();
+    if (_M_pi != 0)
+      _M_pi->_M_weak_release();
+    _M_pi = __tmp;  
+    return *this;
+}
+ 
+~__weak_count() // nothrow
+{
+    if (_M_pi != 0)
+        _M_pi->_M_weak_release();
+}	
+	\end{lstlisting}
+	
+	从上面可以看出:
+	
+	\begin{itemize}
+		\item \verb|__weak_count|相关的赋值拷贝以及析构函数均只会影响到\verb|weak_count|的值，对\verb|use_count|没有影响；当\verb|weak_count|为0时，释放管理对象。也就是说\verb|__weak_ptr|不影响被管理对象的生命周期。同时由于\verb|__weak_ptr|没有像\verb|__shared_ptr|那样实现\verb|*，->|等常见指针相关操作符，\verb|__weak_ptr|不能直接操作被管理对象；
+		
+		\item \verb|__weak_count|自身间的赋值以及\verb|__shared_count|对\verb|__weak_count|的赋值时，它们都具有同样的指向管理对象的指针；也就是说当多个\verb|__weak_ptr|和\verb|__shared_ptr|指向同一个被管理对象时，它们共享同一个管理对象，这就保证了可以通过\verb|__weak_ptr|可以判断\verb|__shared_ptr|指向的被管理对象是否存在以及获取到被管理对象的指针。
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=15cm,height=9cm]{shared_weak_ptr}
+		\caption{sharedPtr 与 weakPtr 管理同一对象时}
+	\end{figure}
+	
+	由于\verb|weak_ptr|\textbf{不能直接操作被管理对象}\textit{但其仍然持有指向被管理对象的指针}（\textit{用来初始化内部的}\verb|__weak_count|\textit{对象}），\verb|weak_ptr|与被管理对象用虚线联接。
+	
+	\verb|_weak_ptr|有几个重要的成员函数：通过\verb|expired()|方法来\textbf{判断对象是否过期（已经被释放）}；通过\verb|use_count()|方法\textbf{返回目前有多少个}\verb|__shared_ptr|\textbf{对象指向被管理对象}；通过\verb|lock()|方法\textbf{返回一个指向被管理对象的}\verb|__shared_ptr|\textbf{指针}，\textit{调用者可以通过这个}\verb|__shared_ptr|\textit{指针来操纵被管理对象而不用担心资源泄漏}；
+	
+	\begin{lstlisting}
+/*************_weak_ptr*************************/
+long
+use_count() const // never throws
+{ 
+	return _M_refcount._M_get_use_count(); 
+}
+ 
+bool
+expired() const // never throws
+{ 
+	return _M_refcount._M_get_use_count() == 0; 
+}
+ 
+__shared_ptr<_Tp, _Lp>
+lock() const // never throws
+{
+#ifdef __GTHREADS
+       // Optimization: avoid throw overhead.
+    if (expired())
+              return __shared_ptr<element_type, _Lp>();
+ 
+    __try
+    {
+            return __shared_ptr<element_type, _Lp>(*this);
+    }
+    __catch(const bad_weak_ptr&)
+    {
+        // Q: How can we get here?
+       // A: Another thread may have invalidated r after the
+       //    use_count test above.
+       return __shared_ptr<element_type, _Lp>();
+     }
+    
+#else
+    // Optimization: avoid try/catch overhead when single threaded.
+    return expired() ? __shared_ptr<element_type, _Lp>()
+                     : __shared_ptr<element_type, _Lp>(*this);
+ 
+#endif
+} // XXX MT	
+	\end{lstlisting}
+	
+\section{enable\_shared\_from\_this}
+	\url{https://blog.csdn.net/caoshangpa/article/details/79392878}
+	
+	\url{http://www.cnblogs.com/yang-wen/p/8573269.html}
+	
+	当然\verb|shared_ptr|也不是万能的，使用的时候也要注意到它给程序员挖的一个大坑：\verb|shared_ptr|能够管理对象的生命周期，负责对象资源释放，其前提条件是所有\verb|shared_ptr|共用同一个管理对象。如果多个\verb|shared_ptr|使用多个管理对象来管理同一个被管理对象，这些管理对象在\verb|use_count|为\verb|0|时均会释放被管理对象，将会造成多个管理对象多次释放被管理对象，造成\verb|twice delete|的堆错误。
+	
+	\subsection{使用场合}
+		\textit{当类A被}\verb|share_ptr|\textit{管理}，且\textbf{在类A的成员函数里需要把当前类对象作为参数传给其他函数时}，\textit{就需要传递一个指向自身的}\verb|share_ptr|。
+		
+		\paragraph{为何不直接传递this指针}
+		
+		       使用智能指针的初衷就是为了方便资源管理，如果在某些地方使用智能指针，某些地方使用原始指针，很容易破坏智能指针的语义，从而产生各种错误。
+		
+		\paragraph{可以直接传递share\_ptr<this>么？}
+		
+		       答案是不能，因为这样会造成2个非共享的\verb|share_ptr|指向同一个对象，未增加引用计数导对象被析构两次。
+	
+				在 \verb|getptr()| 函数构造智能指针时, 我们\textbf{无法确定这个对象是不是被} \verb|shared_ptr| \textbf{管理着, 因此这样构造的} \verb|shared_ptr| \textbf{并不是与其他} \verb|shared_ptr| \textbf{共享一个计数器}, 那么, \textbf{在析构时就会导致对象被重复释放}, 从而引发错误.
+				
+			\begin{lstlisting}
+#include <memory>
+#include <iostream>
+ 
+class Bad
+{
+public:
+	std::shared_ptr<Bad> getptr() {
+		return std::shared_ptr<Bad>(this);
+	}
+	~Bad() { std::cout << "Bad::~Bad() called" << std::endl; }
+};
+ 
+int main()
+{
+	// 错误的示例，每个shared_ptr都认为自己是对象仅有的所有者
+	std::shared_ptr<Bad> bp1(new Bad());
+	std::shared_ptr<Bad> bp2 = bp1->getptr();
+	// 打印bp1和bp2的引用计数
+	std::cout << "bp1.use_count() = " << bp1.use_count() << std::endl;
+	std::cout << "bp2.use_count() = " << bp2.use_count() << std::endl;
+}  // Bad 对象将会被删除两次			
+			\end{lstlisting}
+			
+	当然，\textbf{一个对象被删除两次会导致崩溃}。
+	
+	\subsection{使用场景分析}
+		现在明确一下我们的需求: \textit{在一个对象内部构造该对象的} \verb|shared_ptr| \textit{时, 即使该对象已经被} \verb|shared_ptr| \textit{管理着, 也不会造成对象被两个独立的智能指针管理}.
+	
+		\textbf{这就要求}我们在对象内构造对象的智能指针时, \textbf{必须能识别有对象是否已经由其他智能指针管理, 智能指针的数量, 并且我们创建智能指针后也能让之前的智能指针感知到}.
+		
+		那么上述问题如何解决呢，就是通过\verb|enable_shared_from_this|.
+		
+		\verb|enable_shared_from_this|是一个模板类，定义于头文件\verb|<memory>|，其原型为：
+		
+		\verb|template< class T > class enable_shared_from_this;|
+		
+		\begin{lstlisting}
+#include <memory>
+#include <iostream>
+ 
+struct Good : std::enable_shared_from_this<Good> // 注意：继承
+{
+public:
+	std::shared_ptr<Good> getptr() {
+		return shared_from_this();
+	}
+	~Good() { std::cout << "Good::~Good() called" << std::endl; }
+};
+ 
+int main()
+{
+	// 大括号用于限制作用域，这样智能指针就能在system("pause")之前析构
+	{
+		std::shared_ptr<Good> gp1(new Good());
+		std::shared_ptr<Good> gp2 = gp1->getptr();
+		// 打印gp1和gp2的引用计数
+		std::cout << "gp1.use_count() = " << gp1.use_count() << std::endl;
+		std::cout << "gp2.use_count() = " << gp2.use_count() << std::endl;
+	}
+	system("pause");
+} 		
+		\end{lstlisting}
+		
+		\textbf{为何会出现这种使用场合}?
+		
+		因为\textbf{在异步调用中}，存在一个保活机制，\textit{异步函数执行的时间点我们是无法确定的，然而异步函数可能会使用到异步调用之前就存在的变量}。\textbf{为了保证该变量在异步函数执期间一直有效，我们可以传递一个指向自身的share\_ptr给异步函数，这样在异步函数执行期间share\_ptr所管理的对象就不会析构，所使用的变量也会一直有效了}（保活）。
+	
+	\subsection{实现原理分析}
+		当一个对象\verb|M|创建后，如果一个函数\verb|getThisPtr()|（另一个类的成员函数或是其它自由函数）的形参为M类型的智能指针，如何在对象M内部将对象M的指针作为实参传递给该函数f ? C++引入了\verb|enable_shared_from_this|利用\verb|weak_ptr|的特性解决了这一问题。
+	
+		其基本思想是通过\verb|M|继承模板类\verb|enable_shared_from_this|，这样对象M内部将会有一个\verb|__weak_ptr|指针\verb|_M_weak_this|，在第一次创建指向\verb|M|的\verb|shared_ptr Ptr|时，\textbf{通过模板特化}，将会初始化\verb|_M_weak_this|;这样\verb|M|内部也会产生一个指向自身的\verb|weak_ptr|，并且该\verb|weak_ptr|内部的管理对象与\verb|Ptr|的管理对象是相同的.
+		
+		（这可以从\verb|weak_ptr|内部的\verb|_M_assign|函数看出）
+		\begin{lstlisting}
+// Friend of enable_shared_from_this.
+template<typename _Tp1, typename _Tp2>
+void __enable_shared_from_this_helper(const __shared_count<>&, const enable_shared_from_this<_Tp1>*, const _Tp2*);
+ 
+ 
+template<typename _Tp1>
+explicit __shared_ptr(_Tp1* __p)
+: _M_ptr(__p), _M_refcount(__p)
+{
+	__glibcxx_function_requires(_ConvertibleConcept<_Tp1*, _Tp*>) typedef int _IsComplete[sizeof(_Tp1)];
+	__enable_shared_from_this_helper(_M_refcount, __p, __p);
+ 
+} 
+ 
+template<typename _Tp>
+class enable_shared_from_this
+{
+protected:
+	enable_shared_from_this() { }
+      
+    enable_shared_from_this(const enable_shared_from_this&) { }
+ 
+    enable_shared_from_this&
+    operator=(const enable_shared_from_this&)
+    { 
+    	return *this; 
+    }
+ 
+    ~enable_shared_from_this() { }
+ 
+public:
+    shared_ptr<_Tp>
+    shared_from_this()
+    { 
+    	return shared_ptr<_Tp>(this->_M_weak_this); 
+    }
+ 
+    shared_ptr<const _Tp>
+    shared_from_this() const
+    { 
+    	return shared_ptr<const _Tp>(this->_M_weak_this); 
+    }
+ 
+    private:
+    template<typename _Tp1>
+    void
+    _M_weak_assign(_Tp1* __p, const __shared_count<>& __n) const
+    { 
+    	_M_weak_this._M_assign(__p, __n); 
+    }
+ 
+    template<typename _Tp1>
+    friend void
+    __enable_shared_from_this_helper(const __shared_count<>& __pn, const enable_shared_from_this* __pe, const _Tp1* __px)
+    {
+		if (__pe != 0)
+		 __pe->_M_weak_assign(const_cast<_Tp1*>(__px), __pn);
+    }
+    
+    mutable weak_ptr<_Tp>  _M_weak_this;
+};
+ 
+_M_assign(_Tp* __ptr, const __shared_count<_Lp>& __refcount)
+{
+    _M_ptr = __ptr;
+    _M_refcount = __refcount;
+}		
+		\end{lstlisting}
+
+
+
+
+
+
+
+
+
+\section{sharedCount、weakCount}	
+	\subsection{count base}
+		\begin{lstlisting}
+template<_Lock_policy _Lp>
+class _Mutex_base
+{
+	protected:
+	// The atomic policy uses fully-fenced builtins, single doesn't care.
+	enum { _S_need_barriers = 0 };
+};
+
+template<>
+class _Mutex_base<_S_mutex>
+: public __gnu_cxx::__mutex
+{
+	protected:
+	// This policy is used when atomic builtins are not available.
+	// The replacement atomic operations might not have the necessary
+	// memory barriers.
+	enum { _S_need_barriers = 1 };
+};
+
+template<_Lock_policy _Lp = __default_lock_policy>
+class _Sp_counted_base
+: public _Mutex_base<_Lp>
+{
+	public:  
+	_Sp_counted_base()
+	: _M_use_count(1), _M_weak_count(1) { }
+	
+	virtual
+	~_Sp_counted_base() // nothrow 
+	{ }
+	
+	// Called when _M_use_count drops to zero, to release the resources
+	// managed by *this.
+	virtual void
+	_M_dispose() = 0; // nothrow
+	
+	// Called when _M_weak_count drops to zero.
+	virtual void
+	_M_destroy() // nothrow
+	{ delete this; }
+	
+	virtual void*
+	_M_get_deleter(const std::type_info&) = 0;
+	
+	void
+	_M_add_ref_copy()
+	{ 
+		__gnu_cxx::__atomic_add_dispatch(&_M_use_count, 1); 
+	}
+	
+	void
+	_M_add_ref_lock();
+	
+	void
+	_M_release() // nothrow
+	{
+		// Be race-detector-friendly.  For more info see bits/c++config.
+		_GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(&_M_use_count);
+		if (__gnu_cxx::__exchange_and_add_dispatch(&_M_use_count, -1) == 1)
+		{
+			_GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(&_M_use_count);
+			_M_dispose();
+			// There must be a memory barrier between dispose() and destroy()
+			// to ensure that the effects of dispose() are observed in the
+			// thread that runs destroy().
+			// See http://gcc.gnu.org/ml/libstdc++/2005-11/msg00136.html
+			if (_Mutex_base<_Lp>::_S_need_barriers)
+			{
+				__atomic_thread_fence (__ATOMIC_ACQ_REL);
+			}
+			
+			// Be race-detector-friendly.  For more info see bits/c++config.
+			_GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(&_M_weak_count);
+			if (__gnu_cxx::__exchange_and_add_dispatch(&_M_weak_count,-1) == 1)
+			{
+				_GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(&_M_weak_count);
+				_M_destroy();
+			}
+		}
+	}
+	
+	void
+	_M_weak_add_ref() // nothrow
+	{ 
+		__gnu_cxx::__atomic_add_dispatch(&_M_weak_count, 1); 
+	}
+	
+	void
+	_M_weak_release() // nothrow
+	{
+		// Be race-detector-friendly. For more info see bits/c++config.
+		_GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(&_M_weak_count);
+		if (__gnu_cxx::__exchange_and_add_dispatch(&_M_weak_count, -1) == 1)
+		{
+			_GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(&_M_weak_count);
+			if (_Mutex_base<_Lp>::_S_need_barriers)
+			{
+				// See _M_release(),
+				// destroy() must observe results of dispose()
+				__atomic_thread_fence (__ATOMIC_ACQ_REL);
+			}
+			_M_destroy();
+		}
+	}
+	
+	long
+	_M_get_use_count() const // nothrow
+	{
+		// No memory barrier is used here so there is no synchronization
+		// with other threads.
+		return const_cast<const volatile _Atomic_word&>(_M_use_count);
+	}
+	
+	private:  
+	_Sp_counted_base(_Sp_counted_base const&);
+	_Sp_counted_base& operator=(_Sp_counted_base const&);
+	
+	_Atomic_word  _M_use_count;     // #shared
+	_Atomic_word  _M_weak_count;    // #weak + (#shared != 0)
+};
+
+template<>
+inline void
+_Sp_counted_base<_S_single>::
+_M_add_ref_lock()
+{
+	if (__gnu_cxx::__exchange_and_add_dispatch(&_M_use_count, 1) == 0)
+	{
+		_M_use_count = 0;
+		__throw_bad_weak_ptr();
+	}
+}
+
+template<>
+inline void
+_Sp_counted_base<_S_mutex>::
+_M_add_ref_lock()
+{
+	__gnu_cxx::__scoped_lock sentry(*this);
+	if (__gnu_cxx::__exchange_and_add_dispatch(&_M_use_count, 1) == 0)
+	{
+		_M_use_count = 0;
+		__throw_bad_weak_ptr();
+	}
+}
+
+template<> 
+inline void
+_Sp_counted_base<_S_atomic>::
+_M_add_ref_lock()
+{
+	// Perform lock-free add-if-not-zero operation.
+	_Atomic_word __count = _M_use_count;
+	do
+	{
+		if (__count == 0)
+		__throw_bad_weak_ptr();
+		// Replace the current counter value with the old value + 1, as
+		// long as it's not changed meanwhile. 
+	}
+	while (!__atomic_compare_exchange_n(&_M_use_count, &__count, __count + 1,true, __ATOMIC_ACQ_REL, __ATOMIC_RELAXED));
+}
+		
+
+template<typename _Ptr, typename _Deleter, _Lock_policy _Lp>
+class _Sp_counted_base_impl
+: public _Sp_counted_base<_Lp>
+{
+	public:
+	// Precondition: __d(__p) must not throw.
+	_Sp_counted_base_impl(_Ptr __p, _Deleter __d)
+	: _M_ptr(__p), _M_del(__d) { }
+	
+	virtual void
+	_M_dispose() // nothrow
+	{ 
+		_M_del(_M_ptr); 
+	}
+	
+	virtual void*
+	_M_get_deleter(const std::type_info& __ti)
+	{
+#if __cpp_rtti
+		return __ti == typeid(_Deleter) ? &_M_del : 0;
+#else
+		return 0;
+#endif
+	}
+	
+	private:
+	_Sp_counted_base_impl(const _Sp_counted_base_impl&);
+	_Sp_counted_base_impl& operator=(const _Sp_counted_base_impl&);
+	
+	_Ptr      _M_ptr;  // copy constructor must not throw
+	_Deleter  _M_del;  // copy constructor must not throw
+};
 	
 
-\section{enable\_shared\_from\_this}
 	
+template<typename _Tp>
+struct _Sp_deleter
+{
+	typedef void result_type;
+	typedef _Tp* argument_type;
+	void operator()(_Tp* __p) const { delete __p; }
+};		
+		\end{lstlisting}
+
+	\subsection{shared count}
+		\begin{lstlisting}		
+template<_Lock_policy _Lp = __default_lock_policy>
+class __shared_count
+{
+	public: 
+	__shared_count()
+	: _M_pi(0) // nothrow
+	{ }
+	
+	template<typename _Ptr>
+	__shared_count(_Ptr __p) : _M_pi(0)
+	{
+		__try
+		{
+			typedef typename std::tr1::remove_pointer<_Ptr>::type _Tp;
+			_M_pi = new _Sp_counted_base_impl<_Ptr, _Sp_deleter<_Tp>, _Lp>(
+			   __p, _Sp_deleter<_Tp>());
+		}
+		__catch(...)
+		{
+			delete __p;
+			__throw_exception_again;
+		}
+	}
+	
+	template<typename _Ptr, typename _Deleter>
+	__shared_count(_Ptr __p, _Deleter __d) : _M_pi(0)
+	{
+		__try
+		{
+			_M_pi = new _Sp_counted_base_impl<_Ptr, _Deleter, _Lp>(__p, __d);
+		}
+		__catch(...)
+		{
+			__d(__p); // Call _Deleter on __p.
+			__throw_exception_again;
+		}
+	}
+	
+	// Special case for auto_ptr<_Tp> to provide the strong guarantee.
+	template<typename _Tp>
+	explicit
+	__shared_count(std::auto_ptr<_Tp>& __r)
+	: _M_pi(new _Sp_counted_base_impl<_Tp*,
+	_Sp_deleter<_Tp>, _Lp >(__r.get(), _Sp_deleter<_Tp>()))
+	{ 
+		__r.release(); 
+	}
+	
+	// Throw bad_weak_ptr when __r._M_get_use_count() == 0.
+	explicit
+	__shared_count(const __weak_count<_Lp>& __r);
+	
+	~__shared_count() // nothrow
+	{
+		if (_M_pi != 0)
+			_M_pi->_M_release();
+	}
+	
+	__shared_count(const __shared_count& __r)
+	: _M_pi(__r._M_pi) // nothrow
+	{
+		if (_M_pi != 0)
+			_M_pi->_M_add_ref_copy();
+	}
+	
+	__shared_count&
+	operator=(const __shared_count& __r) // nothrow
+	{
+		_Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+		if (__tmp != _M_pi)
+		{
+			if (__tmp != 0)
+				__tmp->_M_add_ref_copy();
+			if (_M_pi != 0)
+				_M_pi->_M_release();
+			_M_pi = __tmp;
+		}
+		return *this;
+	}
+	
+	void
+	_M_swap(__shared_count& __r) // nothrow
+	{
+		_Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+		__r._M_pi = _M_pi;
+		_M_pi = __tmp;
+	}
+	
+	long
+	_M_get_use_count() const // nothrow
+	{ 
+	    	return _M_pi != 0 ? _M_pi->_M_get_use_count() : 0; 
+	}
+	
+	bool
+	_M_unique() const // nothrow
+	{ 
+	    	return this->_M_get_use_count() == 1; 
+	}
+	
+	friend inline bool
+	operator==(const __shared_count& __a, const __shared_count& __b)
+	{ 
+	    	return __a._M_pi == __b._M_pi; 
+	}
+	
+	friend inline bool
+	operator<(const __shared_count& __a, const __shared_count& __b)
+	{ 
+	    	return std::less<_Sp_counted_base<_Lp>*>()(__a._M_pi, __b._M_pi); 
+	}
+	
+	void*
+	_M_get_deleter(const std::type_info& __ti) const
+	{ 
+	    	return _M_pi ? _M_pi->_M_get_deleter(__ti) : 0; 
+	}
+	
+	private:
+	friend class __weak_count<_Lp>;
+	
+	_Sp_counted_base<_Lp>*  _M_pi;
+};	
+	\end{lstlisting}
+	
+	
+	\subsection{weak Count}
+		\begin{lstlisting}
+template<_Lock_policy _Lp>
+class __weak_count
+{
+	public:
+	__weak_count()
+	: _M_pi(0) // nothrow
+	{ }
+	
+	__weak_count(const __shared_count<_Lp>& __r)
+	: _M_pi(__r._M_pi) // nothrow
+	{
+		if (_M_pi != 0)
+			_M_pi->_M_weak_add_ref();
+	}
+	
+	__weak_count(const __weak_count<_Lp>& __r)
+	: _M_pi(__r._M_pi) // nothrow
+	{
+		if (_M_pi != 0)
+			_M_pi->_M_weak_add_ref();
+	}
+	
+	~__weak_count() // nothrow
+	{
+		if (_M_pi != 0)
+			_M_pi->_M_weak_release();
+	}
+	
+	__weak_count<_Lp>&
+	operator=(const __shared_count<_Lp>& __r) // nothrow
+	{
+		_Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+		if (__tmp != 0)
+			__tmp->_M_weak_add_ref();
+		if (_M_pi != 0)
+			_M_pi->_M_weak_release();
+		_M_pi = __tmp;  
+		return *this;
+	}
+	
+	__weak_count<_Lp>&
+	operator=(const __weak_count<_Lp>& __r) // nothrow
+	{
+		_Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+		if (__tmp != 0)
+			__tmp->_M_weak_add_ref();
+		if (_M_pi != 0)
+			_M_pi->_M_weak_release();
+		_M_pi = __tmp;
+		return *this;
+	}
+	
+	void
+	_M_swap(__weak_count<_Lp>& __r) // nothrow
+	{
+		_Sp_counted_base<_Lp>* __tmp = __r._M_pi;
+		__r._M_pi = _M_pi;
+		_M_pi = __tmp;
+	}
+	
+	long
+	_M_get_use_count() const // nothrow
+	{ 
+		return _M_pi != 0 ? _M_pi->_M_get_use_count() : 0; 
+	}
+	
+	friend inline bool
+	operator==(const __weak_count<_Lp>& __a, const __weak_count<_Lp>& __b)
+	{ 
+		return __a._M_pi == __b._M_pi; 
+	}
+	
+	friend inline bool
+	operator<(const __weak_count<_Lp>& __a, const __weak_count<_Lp>& __b)
+	{ 
+		return std::less<_Sp_counted_base<_Lp>*>()(__a._M_pi, __b._M_pi); 
+	}
+	
+	private:
+	friend class __shared_count<_Lp>;
+	
+	_Sp_counted_base<_Lp>*  _M_pi;
+};	
+
+template<_Lock_policy _Lp>
+inline
+__shared_count<_Lp>::
+__shared_count(const __weak_count<_Lp>& __r)
+: _M_pi(__r._M_pi)
+{
+	if (_M_pi != 0)
+		_M_pi->_M_add_ref_lock();
+	else
+		__throw_bad_weak_ptr();
+}
+	\end{lstlisting}
+
+
+\section{SFINAE and enable\_if}
+	\url{https://eli.thegreenplace.net/2014/sfinae-and-enable_if/}
+	
+	\begin{lstlisting}
+void foo(unsigned i) {
+  std::cout << "unsigned " << i << "\n";
+}
+
+template <typename T>
+void foo(const T& t) {
+  std::cout << "template " << t << "\n";
+}	
+	\end{lstlisting}
+	
+	What do you think a call to foo(42) would print? \textbf{The answer is "template 42"}, and the reason for this is that integer literals are signed by default (they only become unsigned with the U suffix). When the compiler examines the overload candidates to choose from for this call, \textit{it sees that the first function} \textbf{needs a conversion}, \textit{while the second one} \textbf{matches perfectly}, \textit{so that is the one it picks}.
 	
 \section{参考}\url{http://developer.51cto.com/art/201208/351569.htm}    
 
