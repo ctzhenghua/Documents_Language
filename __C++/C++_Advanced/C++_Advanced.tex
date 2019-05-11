@@ -4684,13 +4684,13 @@ class __weak_ptr
 	long
 	use_count() const // never throws
 	{ 
-		return _M_refcount._M_get_use_count(); 
+		return _M_refcount._M_get_use_count(); 	//shared Count
 	}
 	
 	bool
 	expired() const // never throws
 	{ 
-		return _M_refcount._M_get_use_count() == 0; 
+		return _M_refcount._M_get_use_count() == 0; 	//shared Count
 	}
 	
 	void

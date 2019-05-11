@@ -82,6 +82,9 @@
  	\maketitle
  	\tableofcontents
 
+\chapter{Bash 原理}
+	\url{https://blog.csdn.net/woaimeinuo/article/details/51118882}
+
 \chapter{Bash 基本功能}
 	\section{基本}
 		\paragraph{history}查看历史命令
@@ -212,76 +215,7 @@
 			
 			\verb|cut -d ":" -f 1,3 /etc/passwd| 截取第一列和第三列，并且分隔符号为：
 	
-	\section{awk}
-		\subsection{基本使用}
-			\paragraph{使用格式}
-				\verb|awk '条件1{动作1} 条件2{动作2}...' 文件名|， 先读入一行，然后逐行执行操作。
-				
-				\subparagraph{条件 Pattern}一般使用关系表达式作为条件
-					\begin{itemize}[itemindent = 1em]
-						\item \verb|x > 10|
-						\item \verb|x >= 10|
-						\item \verb|x <= 10|
-					\end{itemize}
-			
-				\subparagraph{动作 Action}
-					\begin{itemize}[itemindent = 1em]
-						\item 格式化输出
-						\item 流程控制语句
-					\end{itemize}
-			
-			\paragraph{例子}
-				\begin{itemize}
-					\item \verb|awk ' {printf $2 "\t" $6 "\n"}'   student.txt|  :patten 省略，表示对每行都执行，显式文件中的第2列和第6列。
-					\item \verb@df -h|awk '{print $1 "\t" $3}' @: 截取df 输出的第1列和第三列， 与cut 不同的是，awk 无须指定分割符，并且需要注意的是，print 会自动分行，但是格式控制与printf 相同。
-				\end{itemize}
-				
-		
-		\subsection{awk 编程}
-			\paragraph{使用格式}
-				
-				\subparagraph{BEGIN} 在其他所有命令逐行执行前，执行一次 BEGIN后的动作
-				
-					\verb|awk 'BEGIN{print "Test awk BEGIN"} {print $2 "\t" $5}'  student.txt|
-					
-					这条命令首先执行BEGIN 后的 print Anction, 然后逐行读取数据执行之后的条件与动作。
-			
-				\subparagraph{FS内置变量} 指定分隔符
-				
-					\verb|awk '{FS=":"}{print $1"\t"$3}'  /etc/passwd|
-					
-					这条命令意思是指定分割符为：，但是在读入第一行后，再执行后面Action 时，指定分隔符已经来不及了，所以这种情况第一行时不会正确使用分割符分割的，而是从第2行开始的，为了解决这个问题，可以利用前面提到的BEGIN 解决。
-					
-					\verb|awk 'BEGIN{FS=":"}{xx}'  xx|
-				
-				\subparagraph{END} 在所有命令执行完后，执行一次 END后的动作
-					
-					\verb|awk '{print $1"\t"$3}  END{print"The End"}'  student.txt|	
-					
-				
-				\subparagraph{关系运算}
-					\verb@cat fileName.txt | grep -v Name | awk '$6 >= 87 {print $2}'@
 
-	\section{sed} 轻量\textbf{流}(与vi相比支持管道操作)编辑器，主要用来将数据进行选取、替换、删除、新增的命令。
-	
-		\paragraph{使用格式}
-			\verb|sed [选项] '[动作]'  文件名|
-			
-			\begin{itemize}
-				\item \verb|-n |一般sed 命令会将所有数据都输出到屏幕，而如果使用-n 选项，则只会将经过sed 命令处理的行输出到屏幕
-				\item \verb|-e |允许对输入数据应用多条sed 命令编辑
-				\item \verb|-i |用sed 的修改结果直接修改读取数据的文件，而不是由屏幕输出。
-			\end{itemize}
-			
-		\paragraph{动作}
-			\begin{itemize}
-				\item \verb|a |追加，在当前行后添加一行或多行。 添加多行时，除最后一行外，每行末尾需要用\verb|“\”| 代表数据未完结。
-				\item \verb|c |行替换，用c 后面的字符串替换原数据行，替换多行时，除最后一行外，每行末尾需用\verb|“\” |代表数据未完结。
-				\item \verb|i |插入， 在当前行前插入一行或多行，插入多行...
-				\item \verb|d |删除，删除指定行
-				\item \verb|p |打印，输出指定行
-				\item \verb|s |字符替换，用一个字符串替换另一个字符串。格式为\verb|"行范围s/旧字符串/新字符串/g"|
-			\end{itemize}
   
   	
 \chapter{Shell 基本知识}
@@ -1146,6 +1080,78 @@ ls
 	$ ./test2.sh 
 	菜鸟教程官网地址：http://www.runoob.com
 		 		\end{lstlisting}	
+		 	
+
+	\section{awk}
+		\subsection{基本使用}
+			\paragraph{使用格式}
+				\verb|awk '条件1{动作1} 条件2{动作2}...' 文件名|， 先读入一行，然后逐行执行操作。
+				
+				\subparagraph{条件 Pattern}一般使用关系表达式作为条件
+					\begin{itemize}[itemindent = 1em]
+						\item \verb|x > 10|
+						\item \verb|x >= 10|
+						\item \verb|x <= 10|
+					\end{itemize}
+			
+				\subparagraph{动作 Action}
+					\begin{itemize}[itemindent = 1em]
+						\item 格式化输出
+						\item 流程控制语句
+					\end{itemize}
+			
+			\paragraph{例子}
+				\begin{itemize}
+					\item \verb|awk ' {printf $2 "\t" $6 "\n"}'   student.txt|  :patten 省略，表示对每行都执行，显式文件中的第2列和第6列。
+					\item \verb@df -h|awk '{print $1 "\t" $3}' @: 截取df 输出的第1列和第三列， 与cut 不同的是，awk 无须指定分割符，并且需要注意的是，print 会自动分行，但是格式控制与printf 相同。
+				\end{itemize}
+				
+		
+\chapter{awk 编程}
+		\section{BEGIN} 在其他所有命令逐行执行前，执行一次 BEGIN后的动作
+		
+			\verb|awk 'BEGIN{print "Test awk BEGIN"} {print $2 "\t" $5}'  student.txt|
+			
+			这条命令首先执行BEGIN 后的 print Anction, 然后逐行读取数据执行之后的条件与动作。
+	
+		\section{FS内置变量} 指定分隔符
+		
+			\verb|awk '{FS=":"}{print $1"\t"$3}'  /etc/passwd|
+			
+			这条命令意思是指定分割符为：，但是在读入第一行后，再执行后面Action 时，指定分隔符已经来不及了，所以这种情况第一行时不会正确使用分割符分割的，而是从第2行开始的，为了解决这个问题，可以利用前面提到的BEGIN 解决。
+			
+			\verb|awk 'BEGIN{FS=":"}{xx}'  xx|
+		
+		\section{END} 在所有命令执行完后，执行一次 END后的动作
+			
+			\verb|awk '{print $1"\t"$3}  END{print"The End"}'  student.txt|	
+			
+		
+		\section{关系运算}
+			\verb@cat fileName.txt | grep -v Name | awk '$6 >= 87 {print $2}'@
+
+\chapter{sed 命令} 
+	轻量\textbf{流}(与vi相比支持管道操作)编辑器，主要用来将数据进行选取、替换、删除、新增的命令。
+
+	\section{使用格式}
+		\verb|sed [选项] '[动作]'  文件名|
+		
+		\begin{itemize}
+			\item \verb|-n |一般sed 命令会将所有数据都输出到屏幕，而如果使用-n 选项，则只会将经过sed 命令处理的行输出到屏幕
+			\item \verb|-e |允许对输入数据应用多条sed 命令编辑
+			\item \verb|-i |用sed 的修改结果直接修改读取数据的文件，而不是由屏幕输出。
+		\end{itemize}
+		
+	\section{动作}
+		\begin{itemize}
+			\item \verb|a |追加，在当前行后添加一行或多行。 添加多行时，除最后一行外，每行末尾需要用\verb|“\”| 代表数据未完结。
+			\item \verb|c |行替换，用c 后面的字符串替换原数据行，替换多行时，除最后一行外，每行末尾需用\verb|“\” |代表数据未完结。
+			\item \verb|i |插入， 在当前行前插入一行或多行，插入多行...
+			\item \verb|d |删除，删除指定行
+			\item \verb|p |打印，输出指定行
+			\item \verb|s |字符替换，用一个字符串替换另一个字符串。格式为\verb|"行范围s/旧字符串/新字符串/g"|
+		\end{itemize}
+		 	
 		 	
 		 	
 \chapter{Shell 示例}

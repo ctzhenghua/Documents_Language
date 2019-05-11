@@ -962,6 +962,8 @@
 				\end{lstlisting}
 
 			\subsubsection{weak\_ptr}\verb|weak_ptr|一般和\verb|shared_ptr|配合使用。它可以指向\verb|shared_ptr|所指向的对象，但是却不增加对象的引用计数。这样就有可能出现\verb|weak_ptr|所指向的对象实际上已经被释放了的情况。因此，\verb|weak_ptr|有一个\verb|lock|函数，尝试取回一个指向对象的\verb|shared_ptr|。
+			
+				\verb|weak_ptr|是为配合\verb|shared_ptr|而引入的一种智能指针，\textbf{它更像是}\verb|shared_ptr|\textbf{的一个助手}，而不是一个智能指针。\textbf{它的最大作用在于协助}\verb|shared_ptr|\textbf{工作}，\textbf{像旁观者那样观测资源的使用情况}。\verb|weak_ptr|被设计为与\verb|shared_ptr|协同工作，可以从一个\verb|shared_ptr|或者另外一个\verb|weak_ptr|对象构造，获得资源的观测权限。但\verb|weak_ptr|没有共享资源，它的构造不会引入指针引用技术的增加，同样，\verb|weak_ptr|析构时也不会导致引用计数减少，它只是一个静静的观察着。\verb|weak_ptr|的一个很重要作用是：\textbf{打破循环引用}。
 				\begin{lstlisting}
 	auto p10 = make_shared<int>(1024);
 	weak_ptr<int> wp1(p10);
