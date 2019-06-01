@@ -1108,27 +1108,30 @@ ls
 				
 		
 \chapter{awk 编程}
-		\section{BEGIN} 在其他所有命令逐行执行前，执行一次 BEGIN后的动作
-		
-			\verb|awk 'BEGIN{print "Test awk BEGIN"} {print $2 "\t" $5}'  student.txt|
-			
-			这条命令首先执行BEGIN 后的 print Anction, 然后逐行读取数据执行之后的条件与动作。
+	\url{https://www.cnblogs.com/ginvip/p/6352157.html}
+
+	\section{BEGIN} 在其他所有命令逐行执行前，执行一次 BEGIN后的动作
 	
-		\section{FS内置变量} 指定分隔符
+		\verb|awk 'BEGIN{print "Test awk BEGIN"} {print $2 "\t" $5}'  student.txt|
 		
-			\verb|awk '{FS=":"}{print $1"\t"$3}'  /etc/passwd|
-			
-			这条命令意思是指定分割符为：，但是在读入第一行后，再执行后面Action 时，指定分隔符已经来不及了，所以这种情况第一行时不会正确使用分割符分割的，而是从第2行开始的，为了解决这个问题，可以利用前面提到的BEGIN 解决。
-			
-			\verb|awk 'BEGIN{FS=":"}{xx}'  xx|
+		这条命令首先执行BEGIN 后的 print Anction, 然后逐行读取数据执行之后的条件与动作。
+
+	\section{FS内置变量} 指定分隔符
+	
+		\verb|awk '{FS=":"}{print $1"\t"$3}'  /etc/passwd|
 		
-		\section{END} 在所有命令执行完后，执行一次 END后的动作
-			
-			\verb|awk '{print $1"\t"$3}  END{print"The End"}'  student.txt|	
-			
+		这条命令意思是指定分割符为：，但是在读入第一行后，再执行后面Action 时，指定分隔符已经来不及了，所以这种情况第一行时不会正确使用分割符分割的，而是从第2行开始的，为了解决这个问题，可以利用前面提到的BEGIN 解决。
 		
-		\section{关系运算}
-			\verb@cat fileName.txt | grep -v Name | awk '$6 >= 87 {print $2}'@
+		\verb|awk 'BEGIN{FS=":"}{xx}'  xx|
+	
+	\section{END} 在所有命令执行完后，执行一次 END后的动作
+		
+		\verb|awk '{print $1"\t"$3}  END{print"The End"}'  student.txt|	
+		
+	
+	\section{关系运算}
+		\verb@cat fileName.txt | grep -v Name | awk '$6 >= 87 {print $2}'@
+		
 
 \chapter{sed 命令} 
 	轻量\textbf{流}(与vi相比支持管道操作)编辑器，主要用来将数据进行选取、替换、删除、新增的命令。
